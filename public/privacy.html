@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Bruhn Freeman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #020818;
+            --nebula-blue: #0a1628;
+            --glow-blue: #1a6eff;
+            --glow-cyan: #00d4ff;
+            --glow-purple: #a855f7;
+            --glow-pink: #ec4899;
+            --text-primary: #e2eaff;
+            --text-secondary: #7ba4d4;
+            --text-muted: #3a5a8a;
+            --border-glow: rgba(26, 110, 255, 0.3);
+            --card-bg: rgba(10, 22, 40, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--deep-space);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield */
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(200,220,255,0.6) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 80%, rgba(180,210,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 15% 90%, rgba(200,200,255,0.6) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 85% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 45%, rgba(180,220,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 35%, rgba(200,230,255,0.6) 0%, transparent 100%);
+        }
+        .stars::after {
+            background-image:
+                radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 35% 25%, rgba(200,210,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 50%, rgba(180,200,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 95% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 20% 5%, rgba(200,230,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 65% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 90%, rgba(180,210,255,0.7) 0%, transparent 100%);
+            animation: twinkle 8s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Nebula gradient overlay */
+        .nebula {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(26, 110, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(168, 85, 247, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 40px 60px 30px;
+            border-bottom: 1px solid var(--border-glow);
+            background: linear-gradient(180deg, rgba(2,8,24,0.95) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeDown 0.8s ease forwards;
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue), var(--glow-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        nav a {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65em;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            margin-left: 30px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        nav a:hover {
+            color: var(--glow-cyan);
+            text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.8em;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, var(--glow-cyan) 50%, var(--glow-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            animation: fadeUp 0.8s 0.2s ease both;
+        }
+
+        .effective-date {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7em;
+            letter-spacing: 0.2em;
+            color: var(--glow-purple);
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            animation: fadeUp 0.8s 0.3s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-text {
+            font-size: 1.05em;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            padding: 24px 28px;
+            border-left: 2px solid var(--glow-blue);
+            background: rgba(26, 110, 255, 0.05);
+            border-radius: 0 8px 8px 0;
+            animation: fadeUp 0.8s 0.4s ease both;
+        }
+
+        .section {
+            margin-bottom: 36px;
+            padding: 28px 32px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            animation: fadeUp 0.7s ease both;
+        }
+        .section:hover {
+            border-color: rgba(26, 110, 255, 0.5);
+            box-shadow: 0 0 30px rgba(26, 110, 255, 0.08), 0 4px 40px rgba(0,0,0,0.4);
+        }
+
+        .section:nth-child(1) { animation-delay: 0.5s; }
+        .section:nth-child(2) { animation-delay: 0.6s; }
+        .section:nth-child(3) { animation-delay: 0.7s; }
+        .section:nth-child(4) { animation-delay: 0.75s; }
+        .section:nth-child(5) { animation-delay: 0.8s; }
+        .section:nth-child(6) { animation-delay: 0.85s; }
+        .section:nth-child(7) { animation-delay: 0.9s; }
+        .section:nth-child(8) { animation-delay: 0.95s; }
+
+        .section-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6em;
+            letter-spacing: 0.25em;
+            color: var(--glow-purple);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--glow-cyan);
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-weight: 300;
+            font-size: 0.97em;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            padding: 6px 0 6px 22px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--glow-blue);
+            font-size: 1.2em;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        ul li strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 0.97em;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        a {
+            color: var(--glow-cyan);
+            text-decoration: none;
+            transition: text-shadow 0.2s;
+        }
+        a:hover {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 30px 40px 40px;
+            border-top: 1px solid var(--border-glow);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6em;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        footer a {
+            color: var(--text-muted);
+            margin: 0 16px;
+            transition: color 0.3s;
+        }
+        footer a:hover { color: var(--glow-cyan); text-shadow: none; }
+
+        /* Glowing line divider */
+        .glow-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glow-blue), var(--glow-purple), var(--glow-cyan), transparent);
+            margin: 0 auto 50px;
+            width: 60%;
+            opacity: 0.4;
+            animation: fadeUp 0.8s 0.45s ease both;
+        }
+
+        @media (max-width: 640px) {
+            header { padding: 24px 24px 20px; flex-direction: column; gap: 16px; }
+            main { padding: 40px 20px 60px; }
+            .page-title { font-size: 1.8em; }
+            .section { padding: 20px 20px; }
+            nav a { margin-left: 16px; font-size: 0.6em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="nebula"></div>
+
+<header>
+    <div class="logo">Bruhn Freeman</div>
+    <nav>
+        <a href="/index.html">Home</a>
+        <a href="/?open=signup">Sign Up</a>
+        <a href="/terms.html">Terms</a>
+    </nav>
+</header>
+
+<main>
+    <div class="page-title">Privacy Policy</div>
+    <div class="effective-date">Effective Date: February 23, 2026</div>
+    <div class="glow-divider"></div>
+
+    <p class="intro-text">
+        At bruhnfreeman.com, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services, including SMS notifications sent upon registration.
+    </p>
+
+    <div class="section">
+        <span class="section-number">Section 01</span>
+        <h2>Information We Collect</h2>
+        <ul>
+            <li><strong>Personal Information:</strong> When you register, we may collect your name, email address, phone number, and other details you provide.</li>
+            <li><strong>Usage Data:</strong> We automatically collect information about your interactions with our site, such as IP address, browser type, and pages visited.</li>
+            <li><strong>SMS-Specific Data:</strong> If you opt-in to receive text messages, we collect your phone number to send registration confirmations or updates. We do not share your mobile information with third parties for their own marketing purposes.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 02</span>
+        <h2>How We Use Your Information</h2>
+        <ul>
+            <li>To provide and maintain our services, including sending SMS notifications for registration.</li>
+            <li>To communicate with you, respond to inquiries, and improve our app.</li>
+            <li>To comply with legal obligations and prevent fraud.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 03</span>
+        <h2>Sharing Your Information</h2>
+        <ul>
+            <li>We may share data with service providers like Twilio for SMS delivery, but only as necessary.</li>
+            <li>We do not sell or rent your personal information to third parties.</li>
+            <li>We may disclose information if required by law or to protect our rights.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 04</span>
+        <h2>Opt-In and Opt-Out for SMS</h2>
+        <ul>
+            <li>By providing your phone number and registering, you consent to receive SMS messages from us.</li>
+            <li>You can opt-out at any time by replying "STOP" to any message or contacting us at <a href="mailto:support@bruhnfreeman.com">support@bruhnfreeman.com</a>.</li>
+            <li>Standard message and data rates may apply.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 05</span>
+        <h2>Data Security</h2>
+        <p>We use reasonable measures to protect your information, but no method of transmission over the internet or electronic storage is 100% secure. We strive to use commercially acceptable means to protect your personal data.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 06</span>
+        <h2>Children's Privacy</h2>
+        <p>Our services are not intended for children under 13. We do not knowingly collect data from minors. If you believe we have inadvertently collected such information, please contact us immediately.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 07</span>
+        <h2>Changes to This Policy</h2>
+        <p>We may update this policy periodically and will notify you via email or a notice on our site. Continued use of our services after changes constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 08</span>
+        <h2>Contact Us</h2>
+        <p>For questions or concerns regarding this policy, email us at <a href="mailto:support@bruhnfreeman.com">support@bruhnfreeman.com</a> or visit <a href="https://www.bruhnfreeman.com" target="_blank">bruhnfreeman.com</a>.</p>
+    </div>
+</main>
+
+<footer>
+    <div style="margin-bottom:14px;">
+        <a href="/index.html">Home</a>
+        <a href="/?open=signup">Sign Up</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/privacy.html">Privacy</a>
+    </div>
+    &copy; 2026 Bruhn Freeman &nbsp;·&nbsp; All Rights Reserved
+</footer>
+
+</body>
+</html>

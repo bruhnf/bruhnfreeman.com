@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms &amp; Conditions — Bruhn Freeman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #020818;
+            --nebula-blue: #0a1628;
+            --glow-blue: #1a6eff;
+            --glow-cyan: #00d4ff;
+            --glow-purple: #a855f7;
+            --glow-pink: #ec4899;
+            --text-primary: #e2eaff;
+            --text-secondary: #7ba4d4;
+            --text-muted: #3a5a8a;
+            --border-glow: rgba(26, 110, 255, 0.3);
+            --card-bg: rgba(10, 22, 40, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--deep-space);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield */
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(200,220,255,0.6) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 80%, rgba(180,210,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 15% 90%, rgba(200,200,255,0.6) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 85% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 45%, rgba(180,220,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 35%, rgba(200,230,255,0.6) 0%, transparent 100%);
+        }
+        .stars::after {
+            background-image:
+                radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 35% 25%, rgba(200,210,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 50%, rgba(180,200,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 95% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 20% 5%, rgba(200,230,255,0.9) 0%, transparent 100%),
+                radial-gradient(1px 1px at 65% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 90%, rgba(180,210,255,0.7) 0%, transparent 100%);
+            animation: twinkle 8s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Nebula gradient overlay */
+        .nebula {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 80% 30%, rgba(168, 85, 247, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 20% 70%, rgba(26, 110, 255, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 40px 60px 30px;
+            border-bottom: 1px solid var(--border-glow);
+            background: linear-gradient(180deg, rgba(2,8,24,0.95) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeDown 0.8s ease forwards;
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue), var(--glow-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65em;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            margin-left: 30px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        nav a:hover {
+            color: var(--glow-cyan);
+            text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.8em;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, var(--glow-purple) 50%, var(--glow-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            animation: fadeUp 0.8s 0.2s ease both;
+        }
+
+        .effective-date {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7em;
+            letter-spacing: 0.2em;
+            color: var(--glow-blue);
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            animation: fadeUp 0.8s 0.3s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-text {
+            font-size: 1.05em;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            padding: 24px 28px;
+            border-left: 2px solid var(--glow-purple);
+            background: rgba(168, 85, 247, 0.05);
+            border-radius: 0 8px 8px 0;
+            animation: fadeUp 0.8s 0.4s ease both;
+        }
+
+        .section {
+            margin-bottom: 36px;
+            padding: 28px 32px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            animation: fadeUp 0.7s ease both;
+        }
+        .section:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.07), 0 4px 40px rgba(0,0,0,0.4);
+        }
+
+        .section:nth-child(1) { animation-delay: 0.5s; }
+        .section:nth-child(2) { animation-delay: 0.6s; }
+        .section:nth-child(3) { animation-delay: 0.7s; }
+        .section:nth-child(4) { animation-delay: 0.75s; }
+        .section:nth-child(5) { animation-delay: 0.8s; }
+        .section:nth-child(6) { animation-delay: 0.85s; }
+        .section:nth-child(7) { animation-delay: 0.9s; }
+        .section:nth-child(8) { animation-delay: 0.95s; }
+        .section:nth-child(9) { animation-delay: 1.0s; }
+
+        .section-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6em;
+            letter-spacing: 0.25em;
+            color: var(--glow-blue);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--glow-purple);
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-weight: 300;
+            font-size: 0.97em;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            padding: 6px 0 6px 22px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--glow-purple);
+            font-size: 1.2em;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        ul li strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 0.97em;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        a {
+            color: var(--glow-cyan);
+            text-decoration: none;
+            transition: text-shadow 0.2s;
+        }
+        a:hover {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 30px 40px 40px;
+            border-top: 1px solid var(--border-glow);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6em;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        footer a {
+            color: var(--text-muted);
+            margin: 0 16px;
+            transition: color 0.3s;
+        }
+        footer a:hover { color: var(--glow-cyan); text-shadow: none; }
+
+        /* Glowing line divider */
+        .glow-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glow-purple), var(--glow-pink), var(--glow-blue), transparent);
+            margin: 0 auto 50px;
+            width: 60%;
+            opacity: 0.4;
+            animation: fadeUp 0.8s 0.45s ease both;
+        }
+
+        @media (max-width: 640px) {
+            header { padding: 24px 24px 20px; flex-direction: column; gap: 16px; }
+            main { padding: 40px 20px 60px; }
+            .page-title { font-size: 1.8em; }
+            .section { padding: 20px 20px; }
+            nav a { margin-left: 16px; font-size: 0.6em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="nebula"></div>
+
+<header>
+    <div class="logo">Bruhn Freeman</div>
+    <nav>
+        <a href="/index.html">Home</a>
+        <a href="/?open=signup">Sign Up</a>
+        <a href="/privacy.html">Privacy</a>
+    </nav>
+</header>
+
+<main>
+    <div class="page-title">Terms &amp; Conditions</div>
+    <div class="effective-date">Effective Date: February 23, 2026</div>
+    <div class="glow-divider"></div>
+
+    <p class="intro-text">
+        Welcome to bruhnfreeman.com. These Terms and Conditions govern your use of our website and services. By accessing or using our site, you agree to be bound by these terms in full.
+    </p>
+
+    <div class="section">
+        <span class="section-number">Section 01</span>
+        <h2>Use of Services</h2>
+        <ul>
+            <li>You must be at least 18 years old or have parental consent to use our services.</li>
+            <li>Our app allows registration and sends SMS confirmations to your provided phone number.</li>
+            <li>You agree not to misuse our services, including sending spam or violating any applicable laws.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 02</span>
+        <h2>User Accounts</h2>
+        <ul>
+            <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+            <li>Provide accurate and complete information during registration.</li>
+            <li>Notify us immediately of any unauthorized use of your account.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 03</span>
+        <h2>SMS Communications</h2>
+        <ul>
+            <li>By registering, you consent to receive text messages related to your account activity.</li>
+            <li><strong>Message frequency:</strong> As needed for registration and updates.</li>
+            <li>To opt-out, reply "STOP" to any message. For help, reply "HELP".</li>
+            <li>Carriers are not liable for delayed or undelivered messages.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 04</span>
+        <h2>Intellectual Property</h2>
+        <p>All content on our site is owned by us or our licensors. You may not reproduce, distribute, or create derivative works without prior written permission from Bruhn Freeman.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 05</span>
+        <h2>Disclaimers &amp; Limitations of Liability</h2>
+        <ul>
+            <li>Our services are provided "as is" without warranties of any kind, express or implied.</li>
+            <li>We are not liable for any indirect, incidental, or consequential damages arising from use of our services.</li>
+            <li>Total liability shall not exceed the amount you paid us in the 12 months preceding the claim, if any.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 06</span>
+        <h2>Termination</h2>
+        <p>We reserve the right to terminate or suspend your access to our services at any time, without notice, for conduct that we believe violates these Terms or is harmful to other users, us, third parties, or the integrity of the service.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 07</span>
+        <h2>Governing Law</h2>
+        <p>These Terms and Conditions are governed by and construed in accordance with the laws of the State of New York, USA, without regard to its conflict of law provisions.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 08</span>
+        <h2>Changes to Terms</h2>
+        <p>We reserve the right to update or modify these Terms at any time. Changes will be posted on our site with an updated effective date. Continued use of our services after such changes constitutes your acceptance of the new Terms.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 09</span>
+        <h2>Contact Us</h2>
+        <p>For questions or concerns regarding these Terms, please email us at <a href="mailto:support@bruhnfreeman.com">support@bruhnfreeman.com</a>.</p>
+    </div>
+</main>
+
+<footer>
+    <div style="margin-bottom:14px;">
+        <a href="/index.html">Home</a>
+        <a href="/?open=signup">Sign Up</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/privacy.html">Privacy</a>
+    </div>
+    &copy; 2026 Bruhn Freeman &nbsp;·&nbsp; All Rights Reserved
+</footer>
+
+</body>
+</html>

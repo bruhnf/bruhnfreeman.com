@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phone Tester — Bruhn Freeman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+  /* ══════════════════════════════════════════════════════════════
+     ROOT — COSMIC PALETTE  (identical to index.html)
+  ══════════════════════════════════════════════════════════════ */
+  :root {
+    --void:        #03050f;
+    --deep:        #060a1a;
+    --panel:       rgba(8,14,35,0.88);
+    --panel-s:     #080e23;
+    --blue:        #1a6fff;
+    --blue-lt:     #4d9fff;
+    --cyan:        #00d4ff;
+    --mag:         #c040ff;
+    --violet:      #8b5cf6;
+    --white-s:     #e8f0ff;
+    --text:        #cce0ff;
+    --text2:       #7a9cc4;
+    --text3:       #3d5a80;
+    --border:      rgba(77,159,255,0.18);
+    --border-hi:   rgba(0,212,255,0.40);
+    --green:       #4ade80;
+    --green-g:     rgba(74,222,128,0.10);
+    --red:         #f87171;
+    --red-g:       rgba(248,113,113,0.10);
+    --amber:       #fbbf24;
+    --fd: 'Exo 2', sans-serif;
+    --fb: 'Space Grotesk', sans-serif;
+    --fm: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--fb);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  /* ══════════════════════════════════════════════════════════════
+     COSMOS CANVAS
+  ══════════════════════════════════════════════════════════════ */
+  #cosmos { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ══════════════════════════════════════════════════════════════
+     PAGE SHELL
+  ══════════════════════════════════════════════════════════════ */
+  .page { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 0 28px; }
+
+  /* ══════════════════════════════════════════════════════════════
+     NAVBAR  (identical structure to index.html)
+  ══════════════════════════════════════════════════════════════ */
+  #navbar {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(3,5,15,.92);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+
+  /* brand */
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-hex {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--blue), var(--mag));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--fd); font-weight: 900; font-size: .88rem; color: #fff;
+    clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    box-shadow: 0 0 26px rgba(26,111,255,.48);
+  }
+  .brand-name { font-family: var(--fd); font-weight: 800; font-size: 1rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-s); display: block; }
+  .brand-sub  { font-family: var(--fm); font-size: .58rem; letter-spacing: .18em; color: var(--cyan); text-transform: uppercase; display: block; }
+
+  /* nav links */
+  .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+  .nav-links a {
+    font-family: var(--fb); font-weight: 500; font-size: .82rem; letter-spacing: .07em;
+    color: var(--text2); padding: 8px 14px; transition: color .2s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 3px; left: 14px; right: 14px; height: 1px;
+    background: var(--cyan); transform: scaleX(0); transform-origin: left; transition: transform .25s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    margin-left: 8px;
+    font-family: var(--fd) !important; font-weight: 700 !important;
+    font-size: .78rem !important; letter-spacing: .12em !important;
+    text-transform: uppercase; color: var(--void) !important;
+    background: linear-gradient(90deg, var(--cyan), var(--blue-lt));
+    padding: 10px 22px !important; border-radius: 2px;
+    box-shadow: 0 0 22px rgba(0,212,255,.22);
+    transition: box-shadow .2s, transform .2s !important;
+  }
+  .nav-cta:hover { box-shadow: 0 0 44px rgba(0,212,255,.5) !important; transform: translateY(-1px) !important; color: var(--void) !important; }
+  .nav-cta::after { display: none !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: all .3s; }
+
+  /* ══════════════════════════════════════════════════════════════
+     PAGE HERO BANNER
+  ══════════════════════════════════════════════════════════════ */
+  .page-banner {
+    position: relative; padding: 60px 0 44px; text-align: center; overflow: hidden;
+  }
+  .banner-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(77,159,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(77,159,255,.04) 1px, transparent 1px);
+    background-size: 62px 62px;
+    mask-image: radial-gradient(ellipse 90% 100% at 50% 50%, black 5%, transparent 100%);
+  }
+  .banner-glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 80% at 25% 50%, rgba(26,111,255,.10), transparent 70%),
+      radial-gradient(ellipse 45% 70% at 75% 50%, rgba(192,64,255,.08), transparent 70%);
+  }
+  .banner-content { position: relative; z-index: 2; }
+
+  .banner-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--fm); font-size: .68rem; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid rgba(0,212,255,.28);
+    padding: 6px 18px; background: rgba(0,212,255,.04); margin-bottom: 18px;
+    animation: aFadeDown .7s ease .1s both;
+  }
+  .ey-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+  .banner-title {
+    font-family: var(--fd); font-weight: 900; line-height: .92;
+    font-size: clamp(2.6rem, 6vw, 5.2rem); text-transform: uppercase; letter-spacing: .01em;
+    animation: aFadeUp .8s ease .2s both;
+  }
+  .bt-solid { display: block; color: var(--white-s); }
+  .bt-grad  {
+    display: block;
+    background: linear-gradient(90deg, var(--cyan), var(--blue-lt), var(--mag));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    filter: drop-shadow(0 0 26px rgba(0,212,255,.35));
+  }
+  .banner-sub {
+    margin-top: 12px; font-family: var(--fm); font-size: .82rem;
+    letter-spacing: .12em; color: var(--text2); text-transform: uppercase;
+    animation: aFadeUp .9s ease .35s both;
+  }
+
+  /* ── 5-Step progress bar ── */
+  .progress-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; margin-top: 36px; flex-wrap: wrap; row-gap: 14px;
+    animation: aFadeUp 1s ease .5s both;
+  }
+  .prog-step { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .prog-connector { width: 52px; height: 1px; background: var(--border); flex-shrink: 0; margin-bottom: 28px; transition: background .5s; }
+  .prog-connector.lit { background: linear-gradient(90deg, var(--cyan), var(--text3)); }
+  .prog-hex {
+    width: 40px; height: 40px;
+    clip-path: polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    background: var(--panel-s); border: 1px solid var(--text3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--fd); font-weight: 700; font-size: .82rem;
+    color: var(--text3); transition: all .4s;
+  }
+  .prog-step.done   .prog-hex { background: rgba(74,222,128,.12);  border-color: var(--green);   color: var(--green); }
+  .prog-step.active .prog-hex { background: rgba(0,212,255,.12);   border-color: var(--cyan);    color: var(--cyan); box-shadow: 0 0 18px rgba(0,212,255,.3); }
+  .prog-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); white-space: nowrap; }
+  .prog-step.done   .prog-label { color: var(--green); }
+  .prog-step.active .prog-label { color: var(--cyan);  }
+
+  /* ══════════════════════════════════════════════════════════════
+     SHARED HELPERS
+  ══════════════════════════════════════════════════════════════ */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.vis { opacity: 1; transform: none; }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+  .sec-eye {
+    font-family: var(--fm); font-size: .68rem; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--cyan); display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+  }
+  .sec-eye::before { content: ''; width: 28px; height: 1px; background: linear-gradient(90deg, var(--cyan), transparent); }
+
+  /* ══════════════════════════════════════════════════════════════
+     MAIN AREA  (flex grow to push footer down)
+  ══════════════════════════════════════════════════════════════ */
+  .pt-main { flex: 1; padding-bottom: 90px; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ── STATE: FORM  ───────────────────────────────────────────
+  ══════════════════════════════════════════════════════════════ */
+  .state { display: none; }
+  .state.active { display: block; }
+
+  /* Two-column layout */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+    align-items: start;
+    margin-top: 8px;
+  }
+
+  /* ── Form Card ── */
+  .form-card {
+    background: var(--panel); border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .form-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan), var(--mag));
+  }
+  .form-card-head {
+    padding: 28px 34px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .fch-icon {
+    width: 50px; height: 50px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(26,111,255,.2), rgba(0,212,255,.1));
+    border: 1px solid rgba(0,212,255,.24);
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+  }
+  .fch-title { font-family: var(--fd); font-weight: 700; font-size: 1rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-s); }
+  .fch-sub   { font-family: var(--fm); font-size: .62rem; letter-spacing: .14em; color: var(--text3); margin-top: 4px; }
+  .form-body { padding: 32px 34px 36px; }
+
+  /* form fields */
+  .fg { margin-bottom: 20px; }
+  .fl { display: block; font-family: var(--fm); font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+  .fi {
+    width: 100%; background: rgba(3,5,15,.85); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--fm); font-size: .85rem;
+    padding: 13px 16px; outline: none; transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none; border-radius: 0;
+  }
+  .fi:focus { border-color: var(--cyan); box-shadow: 0 0 0 1px rgba(0,212,255,.28), 0 0 20px rgba(0,212,255,.07); }
+  .fi::placeholder { color: var(--text3); }
+  .fi.invalid { border-color: var(--red); box-shadow: 0 0 0 1px rgba(248,113,113,.28); }
+  .field-err { font-family: var(--fm); font-size: .6rem; letter-spacing: .12em; color: var(--red); margin-top: 5px; display: none; }
+  .field-err.show { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  /* submit button */
+  .btn-launch {
+    width: 100%; padding: 17px; margin-top: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    font-family: var(--fd); font-weight: 700; font-size: .88rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--void);
+    background: linear-gradient(90deg, var(--cyan), var(--blue-lt));
+    border: none; cursor: pointer; border-radius: 2px;
+    box-shadow: 0 0 30px rgba(0,212,255,.25);
+    position: relative; overflow: hidden;
+    transition: box-shadow .25s, transform .25s;
+  }
+  .btn-launch::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+    transform: translateX(-100%); transition: transform .5s;
+  }
+  .btn-launch:hover { box-shadow: 0 0 60px rgba(0,212,255,.5); transform: translateY(-2px); }
+  .btn-launch:hover::after { transform: translateX(100%); }
+  .btn-launch:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-arrow { font-size: 1.1rem; transition: transform .25s; }
+  .btn-launch:not(:disabled):hover .btn-arrow { transform: translateX(4px); }
+
+  .form-legal {
+    font-family: var(--fm); font-size: .62rem; color: var(--text3); line-height: 1.7;
+    text-align: center; margin-top: 16px; letter-spacing: .06em;
+  }
+  .form-legal a { color: var(--cyan); transition: color .2s; }
+  .form-legal a:hover { color: var(--white-s); }
+
+  /* ── Sidebar Info Cards ── */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+  .side-card {
+    background: var(--panel); border: 1px solid var(--border);
+    padding: 26px 28px; position: relative; overflow: hidden;
+    transition: border-color .3s;
+  }
+  .side-card:hover { border-color: rgba(0,212,255,.28); }
+  .side-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0); transform-origin: left; transition: transform .4s;
+  }
+  .side-card:hover::before { transform: scaleX(1); }
+
+  .side-card-title {
+    font-family: var(--fd); font-weight: 700; font-size: .82rem;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--white-s);
+    margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .sc-ico {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,.14), rgba(26,111,255,.08));
+    border: 1px solid rgba(0,212,255,.2);
+    display: flex; align-items: center; justify-content: center; font-size: .82rem;
+  }
+
+  /* How-it-works steps */
+  .how-list { display: flex; flex-direction: column; gap: 14px; }
+  .how-row  { display: flex; gap: 12px; align-items: flex-start; }
+  .how-n {
+    width: 24px; height: 24px; flex-shrink: 0;
+    background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--fd); font-weight: 700; font-size: .68rem; color: var(--cyan); margin-top: 1px;
+  }
+  .how-txt { font-size: .82rem; color: var(--text2); line-height: 1.55; }
+  .how-txt b { color: var(--white-s); font-weight: 600; }
+
+  /* Code word badges */
+  .cw-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+  .cw {
+    font-family: var(--fm); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase;
+    background: rgba(26,111,255,.12); border: 1px solid rgba(77,159,255,.2);
+    color: var(--blue-lt); padding: 5px 10px;
+  }
+
+  /* Requirements list */
+  .req-list { display: flex; flex-direction: column; gap: 11px; }
+  .req-row  { display: flex; gap: 12px; align-items: flex-start; }
+  .req-dot  { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); margin-top: 5px; flex-shrink: 0; }
+  .req-txt  { font-size: .82rem; color: var(--text2); line-height: 1.5; }
+  .req-txt b { color: var(--white-s); }
+
+  /* Support block */
+  .supp-num { font-family: var(--fd); font-weight: 800; font-size: 1.5rem; color: var(--cyan); text-shadow: 0 0 18px rgba(0,212,255,.3); letter-spacing: .05em; }
+  .supp-hrs { font-family: var(--fm); font-size: .62rem; color: var(--text3); margin-top: 6px; letter-spacing: .1em; }
+  .supp-note { font-size: .82rem; color: var(--text2); line-height: 1.6; margin-top: 10px; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ── STATE: WAITING  ────────────────────────────────────────
+  ══════════════════════════════════════════════════════════════ */
+  .status-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    align-items: start; margin-top: 8px;
+  }
+
+  /* Animated phone icon panel */
+  .wait-visual {
+    background: var(--panel); border: 1px solid rgba(0,212,255,.25);
+    padding: 56px 40px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .wait-visual::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan), var(--blue));
+    background-size: 200%; animation: shimmer 2.5s linear infinite;
+  }
+  @keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+
+  .wait-ring-wrap {
+    width: 130px; height: 130px; margin: 0 auto 36px;
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .wait-ring-wrap::before, .wait-ring-wrap::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid rgba(0,212,255,.5);
+    animation: wRing 2.6s ease-out infinite;
+  }
+  .wait-ring-wrap::after { animation-delay: 1.3s; }
+  @keyframes wRing { 0%{transform:scale(.55);opacity:.9} 100%{transform:scale(1.7);opacity:0} }
+  .wait-core {
+    width: 78px; height: 78px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,212,255,.18), rgba(26,111,255,.14));
+    border: 2px solid var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; position: relative; z-index: 1;
+    box-shadow: 0 0 32px rgba(0,212,255,.28);
+    animation: phoneBob 2s ease-in-out infinite;
+  }
+  @keyframes phoneBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+  .wait-status-title {
+    font-family: var(--fd); font-weight: 900; font-size: 2rem;
+    text-transform: uppercase; letter-spacing: .04em;
+    background: linear-gradient(90deg, var(--cyan), var(--blue-lt));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 10px;
+  }
+  .wait-status-msg { font-size: .9rem; color: var(--text2); line-height: 1.75; max-width: 380px; margin: 0 auto; }
+
+  .wait-meta {
+    display: flex; justify-content: center; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .wm-item { text-align: center; }
+  .wm-val  { font-family: var(--fd); font-weight: 700; font-size: 1.5rem; color: var(--cyan); }
+  .wm-lbl  { font-family: var(--fm); font-size: .6rem; letter-spacing: .18em; color: var(--text3); text-transform: uppercase; margin-top: 4px; }
+
+  /* Live terminal */
+  .wait-term {
+    background: var(--panel); border: 1px solid rgba(0,212,255,.18);
+  }
+  .term-bar {
+    background: rgba(77,159,255,.06); border-bottom: 1px solid rgba(0,212,255,.14);
+    padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .td { width: 11px; height: 11px; border-radius: 50%; }
+  .td-r{background:#ff5f57} .td-y{background:#febc2e} .td-g{background:#28c840}
+  .term-title { flex: 1; text-align: center; font-family: var(--fm); font-size: .62rem; letter-spacing: .14em; color: var(--text3); }
+  .term-body  { padding: 22px 26px; font-family: var(--fm); font-size: .76rem; line-height: 2; color: var(--text2); min-height: 280px; }
+  .tl { opacity: 0; animation: tLineIn .3s ease forwards; }
+  .tl:nth-child(1){animation-delay:.2s}  .tl:nth-child(2){animation-delay:.8s}
+  .tl:nth-child(3){animation-delay:1.6s} .tl:nth-child(4){animation-delay:2.6s}
+  .tl:nth-child(5){animation-delay:3.5s} .tl:nth-child(6){animation-delay:4.5s}
+  .tl:nth-child(7){animation-delay:5.5s} .tl:nth-child(8){animation-delay:6.5s}
+  @keyframes tLineIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:none} }
+  .tc  { color: var(--cyan); }
+  .tmg { color: var(--mag);  }
+  .tb  { color: var(--blue-lt); }
+  .tg  { color: var(--green); }
+  .td2 { color: var(--text3); }
+  .tw  { color: var(--amber); }
+  .tp::before { content: '❯ '; color: var(--blue-lt); }
+
+  .wait-actions { text-align: center; padding: 0 40px 40px; }
+  .wait-note { font-family: var(--fm); font-size: .65rem; color: var(--text3); letter-spacing: .1em; line-height: 1.7; margin-bottom: 20px; }
+
+  /* ══════════════════════════════════════════════════════════════
+     ── STATE: SUCCESS  ────────────────────────────────────────
+  ══════════════════════════════════════════════════════════════ */
+  .result-panel {
+    background: var(--panel); border: 1px solid var(--border);
+    padding: 64px 52px; text-align: center;
+    max-width: 760px; margin: 8px auto 0;
+    position: relative; overflow: hidden;
+  }
+  .result-panel.success { border-color: rgba(74,222,128,.3); }
+  .result-panel.success::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--green), #22d3ee, var(--green));
+  }
+  .result-panel.failed  { border-color: rgba(248,113,113,.28); }
+  .result-panel.failed::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--mag), var(--red));
+  }
+
+  /* success/fail icon rings */
+  .result-icon-ring {
+    width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 38px;
+    display: flex; align-items: center; justify-content: center; font-size: 3rem;
+  }
+  .result-icon-ring.success {
+    background: linear-gradient(135deg, rgba(74,222,128,.14), rgba(34,197,94,.08));
+    border: 2px solid rgba(74,222,128,.4);
+    box-shadow: 0 0 40px rgba(74,222,128,.18);
+    animation: popIn .6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .result-icon-ring.failed {
+    background: linear-gradient(135deg, rgba(248,113,113,.12), rgba(192,64,255,.08));
+    border: 2px solid rgba(248,113,113,.35);
+    box-shadow: 0 0 40px rgba(248,113,113,.16);
+    animation: shakeIn .55s ease .15s both;
+  }
+  @keyframes popIn   { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+  @keyframes shakeIn { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+
+  .result-eyebrow { font-family: var(--fm); font-size: .68rem; letter-spacing: .24em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; }
+  .result-title {
+    font-family: var(--fd); font-weight: 900; text-transform: uppercase;
+    font-size: clamp(2rem,5vw,3.5rem); letter-spacing: .02em; line-height: 1;
+  }
+  .result-title.success {
+    background: linear-gradient(90deg, var(--green), #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .result-title.failed {
+    background: linear-gradient(90deg, var(--red), var(--mag));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .result-msg { font-size: .92rem; color: var(--text2); line-height: 1.75; max-width: 500px; margin: 14px auto 0; }
+
+  /* score bar */
+  .score-wrap { margin: 36px 0 0; }
+  .score-labels { display: flex; justify-content: space-between; font-family: var(--fm); font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+  .score-labels span { color: var(--green); }
+  .score-track { height: 6px; background: rgba(77,159,255,.1); overflow: hidden; }
+  .score-fill  { height: 100%; background: linear-gradient(90deg, var(--green), #22d3ee); transform: scaleX(0); transform-origin: left; transition: transform 1.3s cubic-bezier(.22,1,.36,1) .3s; }
+  .score-fill.go { transform: scaleX(1); }
+
+  /* result stat cards */
+  .res-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 32px; }
+  .rs { background: rgba(3,5,15,.7); border: 1px solid var(--border); padding: 22px 16px; text-align: center; }
+  .rs-v { font-family: var(--fd); font-weight: 800; font-size: 1.65rem; line-height: 1; }
+  .rs-v.green { color: var(--green); text-shadow: 0 0 14px rgba(74,222,128,.3); }
+  .rs-v.cyan  { color: var(--cyan);  text-shadow: 0 0 14px rgba(0,212,255,.3);  }
+  .rs-v.red   { color: var(--red);   text-shadow: 0 0 14px rgba(248,113,113,.3); }
+  .rs-l { font-family: var(--fm); font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text3); margin-top: 7px; }
+
+  /* fail support box */
+  .fail-box {
+    background: linear-gradient(135deg, rgba(248,113,113,.07), rgba(192,64,255,.07));
+    border: 1px solid rgba(248,113,113,.2);
+    padding: 26px 36px; margin: 32px auto 0; display: inline-block; min-width: 260px;
+  }
+  .fail-box-lbl { font-family: var(--fm); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+  .fail-box-num { font-family: var(--fd); font-weight: 800; font-size: 1.8rem; color: var(--red); text-shadow: 0 0 16px rgba(248,113,113,.3); letter-spacing: .05em; }
+  .fail-box-hrs { font-family: var(--fm); font-size: .62rem; color: var(--text3); margin-top: 6px; letter-spacing: .1em; }
+
+  /* shared action buttons */
+  .result-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+  .btn-solid {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--fd); font-weight: 700; font-size: .8rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--void); background: linear-gradient(90deg, var(--cyan), var(--blue-lt));
+    padding: 14px 38px; border: none; cursor: pointer; border-radius: 2px;
+    box-shadow: 0 0 28px rgba(0,212,255,.24); transition: all .25s;
+  }
+  .btn-solid:hover { box-shadow: 0 0 54px rgba(0,212,255,.5); transform: translateY(-2px); color: var(--void); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--fd); font-weight: 700; font-size: .8rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--cyan); background: transparent;
+    border: 1px solid rgba(0,212,255,.38);
+    padding: 14px 38px; cursor: pointer; border-radius: 2px; transition: all .25s;
+  }
+  .btn-outline:hover { background: rgba(0,212,255,.07); box-shadow: 0 0 22px rgba(0,212,255,.14); transform: translateY(-2px); }
+
+  /* ══════════════════════════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════════════════════════ */
+  #footer {
+    background: var(--deep); border-top: 1px solid var(--border);
+    padding: 28px 0; margin-top: auto;
+  }
+  .foot-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+  .foot-copy  { font-family: var(--fm); font-size: .64rem; color: var(--text3); letter-spacing: .1em; }
+  .foot-links { display: flex; gap: 24px; }
+  .foot-links a { font-family: var(--fm); font-size: .64rem; color: var(--text3); letter-spacing: .1em; transition: color .2s; }
+  .foot-links a:hover { color: var(--cyan); }
+
+  /* ══════════════════════════════════════════════════════════════
+     KEYFRAMES
+  ══════════════════════════════════════════════════════════════ */
+  @keyframes aFadeDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:none} }
+  @keyframes aFadeUp   { from{opacity:0;transform:translateY(26px)}  to{opacity:1;transform:none} }
+
+  /* ══════════════════════════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════════════════════════ */
+  @media(max-width:1024px) {
+    .form-grid   { grid-template-columns: 1fr; }
+    .sidebar     { display: grid; grid-template-columns: 1fr 1fr; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+  @media(max-width:768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column; gap: 4px;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: rgba(3,5,15,.98); border-bottom: 1px solid var(--border);
+      padding: 16px; z-index: 10;
+    }
+    .nav-links.open .nav-cta { margin-left: 0; text-align: center; }
+    .form-row   { grid-template-columns: 1fr; }
+    .sidebar    { grid-template-columns: 1fr; }
+    .res-stats  { grid-template-columns: 1fr; }
+    .form-card-head, .form-body { padding-left: 20px; padding-right: 20px; }
+    .result-panel { padding: 44px 24px; }
+    .progress-bar { justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
+  }
+  @media(max-width:480px) {
+    .wait-meta { gap: 20px; }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div id="cur-dot"></div>
+  <div id="cur-ring"></div>
+
+  <!-- Cosmos particle canvas -->
+  <canvas id="cosmos"></canvas>
+
+  <div class="page">
+
+    <!-- ══════════════════════════════════════════════════════════
+         NAVBAR
+    ══════════════════════════════════════════════════════════════ -->
+    <nav id="navbar">
+      <div class="wrap">
+        <div class="nav-inner">
+
+          <a href="/" class="brand">
+            <div class="brand-hex">BF</div>
+            <div>
+              <span class="brand-name">Bruhn Freeman</span>
+              <span class="brand-sub">// Custom Engineered Solutions</span>
+            </div>
+          </a>
+
+          <ul class="nav-links" id="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/#services">Services</a></li>
+            <li><a href="/#work">Our Work</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/#contact">Support</a></li>
+            <li><a href="/" class="nav-cta">← Back to Home</a></li>
+          </ul>
+
+          <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+
+        </div>
+      </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════════
+         BANNER
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="page-banner">
+      <div class="banner-grid"></div>
+      <div class="banner-glow"></div>
+      <div class="banner-content wrap">
+
+        <div class="banner-eyebrow">
+          <span class="ey-dot"></span>
+          Bruhn Freeman · Voice Quality Analysis Platform
+        </div>
+
+        <h1 class="banner-title">
+          <span class="bt-solid">Phone</span>
+          <span class="bt-grad">Tester</span>
+        </h1>
+
+        <p class="banner-sub">// Evaluate your call quality from the listener's perspective</p>
+
+        <!-- 5-step progress indicator -->
+        <div class="progress-bar" id="prog-bar">
+          <div class="prog-step done"   id="ps1"><div class="prog-hex">✓</div><div class="prog-label">Registered</div></div>
+          <div class="prog-connector lit" id="pc1"></div>
+          <div class="prog-step done"   id="ps2"><div class="prog-hex">✓</div><div class="prog-label">Verified</div></div>
+          <div class="prog-connector"   id="pc2"></div>
+          <div class="prog-step active" id="ps3"><div class="prog-hex">03</div><div class="prog-label">Start Test</div></div>
+          <div class="prog-connector"   id="pc3"></div>
+          <div class="prog-step"        id="ps4"><div class="prog-hex">04</div><div class="prog-label">Call In</div></div>
+          <div class="prog-connector"   id="pc4"></div>
+          <div class="prog-step"        id="ps5"><div class="prog-hex">05</div><div class="prog-label">Results</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MAIN
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="pt-main">
+      <div class="wrap">
+
+        <!-- ────────────────────────────────────────────────────
+             STATE 1 — TEST FORM  (default view)
+        ──────────────────────────────────────────────────────── -->
+        <div id="state-form" class="state active">
+          <div class="form-grid">
+
+            <!-- Form card -->
+            <div class="form-card reveal">
+              <div class="form-card-head">
+                <div class="fch-icon">🎙️</div>
+                <div>
+                  <div class="fch-title">Initiate Voice Test</div>
+                  <div class="fch-sub">// Confirm your details — code words &amp; call number will be emailed immediately</div>
+                </div>
+              </div>
+
+              <div class="form-body">
+                <form id="test-form" action="/start-test" method="post">
+
+                  <div class="form-row">
+                    <div class="fg">
+                      <label class="fl" for="first_name">// First Name</label>
+                      <input class="fi" type="text" id="first_name" name="first_name"
+                             placeholder="Jane" required autocomplete="given-name" />
+                      <div class="field-err" id="err-fn">First name is required</div>
+                    </div>
+                    <div class="fg">
+                      <label class="fl" for="last_name">// Last Name</label>
+                      <input class="fi" type="text" id="last_name" name="last_name"
+                             placeholder="Smith" required autocomplete="family-name" />
+                      <div class="field-err" id="err-ln">Last name is required</div>
+                    </div>
+                  </div>
+
+                  <div class="fg">
+                    <label class="fl" for="email">// Email Address</label>
+                    <input class="fi" type="email" id="email" name="email"
+                           placeholder="you@company.com" required autocomplete="email" />
+                    <div class="field-err" id="err-em">A valid email address is required</div>
+                  </div>
+
+                  <div class="fg">
+                    <label class="fl" for="phone">// Phone Number to Test</label>
+                    <input class="fi" type="tel" id="phone" name="phone"
+                           placeholder="123-456-7890"
+                           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                           required autocomplete="tel" />
+                    <div class="field-err" id="err-ph">Format required: 123-456-7890</div>
+                  </div>
+
+                  <button type="submit" class="btn-launch" id="submit-btn">
+                    <span id="btn-text">Launch Test</span>
+                    <span class="btn-arrow">→</span>
+                  </button>
+
+                </form>
+
+                <p class="form-legal">
+                  By submitting, you agree to our
+                  <a href="/terms">Terms of Service</a> and
+                  <a href="/privacy">Privacy Policy</a>.<br/>
+                  Your 5 code words and toll-free test number will be emailed to the address above.
+                </p>
+              </div>
+            </div><!-- /.form-card -->
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+
+              <!-- How it works -->
+              <div class="side-card reveal d1">
+                <div class="side-card-title"><div class="sc-ico">📋</div> How It Works</div>
+                <div class="how-list">
+                  <div class="how-row"><div class="how-n">1</div><div class="how-txt"><b>Submit this form.</b> We generate 5 unique NATO phonetic code words and email them to you along with our toll-free test number.</div></div>
+                  <div class="how-row"><div class="how-n">2</div><div class="how-txt"><b>Call the number</b> using the exact device and headset you want to evaluate — mobile, desk phone, headset, or earbuds.</div></div>
+                  <div class="how-row"><div class="how-n">3</div><div class="how-txt"><b>Read your 5 code words</b> clearly when prompted. Our system records, analyzes, and verifies your audio in real time.</div></div>
+                  <div class="how-row"><div class="how-n">4</div><div class="how-txt"><b>Your result</b> appears here instantly. Pass = clear audio. Fail = something needs attention. You get 2 attempts.</div></div>
+                </div>
+              </div>
+
+              <!-- Code word example -->
+              <div class="side-card reveal d2">
+                <div class="side-card-title"><div class="sc-ico">🔤</div> Example Code Words</div>
+                <p style="font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:14px">
+                  Words are drawn from the NATO phonetic alphabet — chosen specifically for maximum speech recognition accuracy.
+                </p>
+                <div class="cw-row">
+                  <span class="cw">Alpha</span><span class="cw">Foxtrot</span>
+                  <span class="cw">Delta</span><span class="cw">Bravo</span><span class="cw">Echo</span>
+                </div>
+                <p style="font-family:var(--fm);font-size:.6rem;color:var(--text3);margin-top:12px;letter-spacing:.1em">
+                  // Your actual words will differ — check your email after submitting.
+                </p>
+              </div>
+
+              <!-- Requirements -->
+              <div class="side-card reveal d2">
+                <div class="side-card-title"><div class="sc-ico">✅</div> Before You Test</div>
+                <div class="req-list">
+                  <div class="req-row"><div class="req-dot"></div><div class="req-txt">Have your email accessible — code words arrive within seconds of submission</div></div>
+                  <div class="req-row"><div class="req-dot"></div><div class="req-txt">Use the <b>exact device</b> you want to test — the phone, headset, or mic that matters</div></div>
+                  <div class="req-row"><div class="req-dot"></div><div class="req-txt">Find a <b>quiet environment</b> — background noise directly affects your score</div></div>
+                  <div class="req-row"><div class="req-dot"></div><div class="req-txt">Speak clearly at a normal pace — don't rush the code words</div></div>
+                  <div class="req-row"><div class="req-dot"></div><div class="req-txt">You have <b>2 attempts</b> per session before the test closes</div></div>
+                </div>
+              </div>
+
+              <!-- Support -->
+              <div class="side-card reveal d3">
+                <div class="side-card-title"><div class="sc-ico">📞</div> Support</div>
+                <!-- REPLACE with your actual support number -->
+                <div class="supp-num">1-800-XXX-XXXX</div>
+                <div class="supp-hrs">Mon – Fri &nbsp; 9:00 am – 5:00 pm EST</div>
+                <div class="supp-note">If the test fails or you experience any issues, our support team is here to help.</div>
+              </div>
+
+            </div><!-- /.sidebar -->
+          </div><!-- /.form-grid -->
+        </div><!-- #state-form -->
+
+
+        <!-- ────────────────────────────────────────────────────
+             STATE 2 — WAITING FOR CALL
+        ──────────────────────────────────────────────────────── -->
+        <div id="state-waiting" class="state">
+          <div class="status-grid">
+
+            <!-- Left: animated visual + status -->
+            <div class="wait-visual reveal">
+              <div class="wait-ring-wrap">
+                <div class="wait-core">📞</div>
+              </div>
+
+              <div class="wait-status-title">Standing By</div>
+              <p class="wait-status-msg">
+                Your code words have been emailed. Call the toll-free number in that email
+                now, using the device you want to test. This page updates automatically.
+              </p>
+
+              <div class="wait-meta">
+                <div class="wm-item">
+                  <div class="wm-val" id="wait-timer">0:00</div>
+                  <div class="wm-lbl">Waiting</div>
+                </div>
+                <div class="wm-item">
+                  <div class="wm-val tc">2</div>
+                  <div class="wm-lbl">Attempts Left</div>
+                </div>
+                <div class="wm-item">
+                  <div class="wm-val" style="color:var(--green)">LIVE</div>
+                  <div class="wm-lbl">System Status</div>
+                </div>
+              </div>
+
+              <div class="wait-actions">
+                <p class="wait-note">
+                  // Page auto-refreshes every 5 seconds<br/>
+                  // Keep this tab open until your result appears
+                </p>
+                <a href="/" class="btn-outline">← Back to Home</a>
+              </div>
+            </div>
+
+            <!-- Right: live terminal log -->
+            <div class="wait-term reveal d1">
+              <div class="term-bar">
+                <div class="td td-r"></div>
+                <div class="td td-y"></div>
+                <div class="td td-g"></div>
+                <div class="term-title">phonetester_live.log</div>
+              </div>
+              <div class="term-body">
+                <div class="tl td2">// Session initialized</div>
+                <div class="tl"><span class="tp tc">register</span>&nbsp;<span class="tb">--status verified</span></div>
+                <div class="tl td2">&nbsp;&nbsp;&rarr; Account lookup: <span class="tg">✓ OK</span></div>
+                <div class="tl"><span class="tp tc">generate-codes</span></div>
+                <div class="tl tc">&nbsp;&nbsp;&rarr; Words dispatched to email <span class="tg">✓</span></div>
+                <div class="tl"><span class="tp tw">await-call</span>&nbsp;<span class="td2">+1-800-XXX-XXXX</span></div>
+                <div class="tl td2">&nbsp;&nbsp;&rarr; Speech recognition: <span class="tg">READY</span></div>
+                <div class="tl td2">&nbsp;&nbsp;&rarr; Recording module: <span class="tg">ACTIVE</span></div>
+              </div>
+            </div>
+
+          </div><!-- /.status-grid -->
+        </div><!-- #state-waiting -->
+
+
+        <!-- ────────────────────────────────────────────────────
+             STATE 3 — SUCCESS
+        ──────────────────────────────────────────────────────── -->
+        <div id="state-success" class="state">
+          <div class="result-panel success reveal">
+
+            <div class="result-icon-ring success">✓</div>
+
+            <div class="result-eyebrow">// Test Result: Verification Successful</div>
+            <div class="result-title success">Test Passed</div>
+            <p class="result-msg">
+              Your code words were clearly received and verified. Your device, microphone,
+              and network are performing well from the listener's perspective. You're good to go.
+            </p>
+
+            <div class="score-wrap">
+              <div class="score-labels">
+                <span>Speech Clarity Score</span>
+                <span id="score-pct">97%</span>
+              </div>
+              <div class="score-track">
+                <div class="score-fill" id="score-fill"></div>
+              </div>
+            </div>
+
+            <div class="res-stats">
+              <div class="rs">
+                <div class="rs-v green">PASS</div>
+                <div class="rs-l">Verification</div>
+              </div>
+              <div class="rs">
+                <div class="rs-v cyan" id="res-attempts">1</div>
+                <div class="rs-l">Attempt(s) Used</div>
+              </div>
+              <div class="rs">
+                <div class="rs-v green">HIGH</div>
+                <div class="rs-l">Audio Quality</div>
+              </div>
+            </div>
+
+            <div class="result-btns">
+              <a href="/" class="btn-solid">← Back to Home</a>
+              <a href="/test" class="btn-outline">Run Test Again</a>
+            </div>
+
+          </div>
+        </div><!-- #state-success -->
+
+
+        <!-- ────────────────────────────────────────────────────
+             STATE 4 — FAILED
+        ──────────────────────────────────────────────────────── -->
+        <div id="state-failed" class="state">
+          <div class="result-panel failed reveal">
+
+            <div class="result-icon-ring failed">✕</div>
+
+            <div class="result-eyebrow">// Test Result: Verification Failed</div>
+            <div class="result-title failed">Test Failed</div>
+            <p class="result-msg">
+              Your code words could not be verified after the maximum number of attempts.
+              This typically indicates issues with your microphone, headset, network connection,
+              or background noise levels. Contact our support team for direct assistance.
+            </p>
+
+            <div class="fail-box">
+              <div class="fail-box-lbl">// Support Line</div>
+              <!-- REPLACE with your actual support number -->
+              <div class="fail-box-num" id="fail-num">1-800-XXX-XXXX</div>
+              <div class="fail-box-hrs">Mon – Fri &nbsp; 9:00 am – 5:00 pm EST</div>
+            </div>
+
+            <div class="result-btns">
+              <a href="/test" class="btn-solid">Try Again</a>
+              <a href="/" class="btn-outline">← Back to Home</a>
+            </div>
+
+          </div>
+        </div><!-- #state-failed -->
+
+
+      </div><!-- /.wrap -->
+    </div><!-- /.pt-main -->
+
+    <!-- ══════════════════════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════════════════════════ -->
+    <footer id="footer">
+      <div class="wrap">
+        <div class="foot-row">
+          <div class="foot-copy">© 2026 BRUHN FREEMAN &nbsp;·&nbsp; ALL RIGHTS RESERVED &nbsp;·&nbsp; NEW YORK STATE, USA</div>
+          <div class="foot-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/#contact">Support</a>
+            <a href="/">Home</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /.page -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+  'use strict';
+
+  /* ── Cosmos Canvas ───────────────────────────────────────────── */
+  (function () {
+    const c   = document.getElementById('cosmos');
+    const ctx = c.getContext('2d');
+    let W, H, stars = [], nbs = [];
+    function init() {
+      W = c.width  = window.innerWidth;
+      H = c.height = window.innerHeight;
+      stars = Array.from({ length: 210 }, () => ({
+        x:  Math.random() * W, y:  Math.random() * H,
+        r:  Math.random() * 1.4 + .2,
+        a:  Math.random(),
+        ds: Math.random() * .003 + .001,
+        vx: (Math.random() - .5) * .065,
+        vy: (Math.random() - .5) * .065,
+        h:  Math.random() < .65 ? 210 : (Math.random() < .5 ? 280 : 190)
+      }));
+      nbs = [
+        { x: W * .15, y: H * .55, r: 310, col: '26,111,255',  a: .06 },
+        { x: W * .82, y: H * .30, r: 265, col: '192,64,255',  a: .05 },
+        { x: W * .50, y: H * .78, r: 225, col: '0,212,255',   a: .04 },
+        { x: W * .70, y: H * .15, r: 185, col: '139,92,246',  a: .04 },
+      ];
+    }
+    init();
+    window.addEventListener('resize', init);
+
+    function draw() {
+      ctx.fillStyle = 'rgba(3,5,15,0.22)';
+      ctx.fillRect(0, 0, W, H);
+
+      // Nebula orbs
+      nbs.forEach(n => {
+        const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+        g.addColorStop(0, `rgba(${n.col},${n.a})`);
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+      });
+
+      // Stars
+      stars.forEach(s => {
+        s.a += s.ds; if (s.a > 1 || s.a < 0) s.ds *= -1;
+        s.x += s.vx; s.y += s.vy;
+        if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
+        if (s.y < 0) s.y = H; if (s.y > H) s.y = 0;
+        ctx.globalAlpha = s.a * .88;
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${s.h},72%,78%)`; ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // Energy streams (bezier particle trails)
+      const T = Date.now() * .000130;
+      [ [W * .1,  H * .45, W * .38, H * .68, '0,212,255' ],
+        [W * .6,  H * .28, W * .84, H * .58, '192,64,255'],
+        [W * .35, H * .62, W * .62, H * .82, '77,159,255'] ].forEach(([sx,sy,ex,ey,col], i) => {
+        const prog = (T + i * .38) % 1;
+        for (let p = 0; p < 1; p += .022) {
+          const mt = 1 - p;
+          const bx = mt*mt*mt*sx + 3*mt*mt*p*(sx+(ex-sx)*.35) + 3*mt*p*p*(ex-(ex-sx)*.3) + p*p*p*ex;
+          const by = mt*mt*mt*sy + 3*mt*mt*p*(sy-55) + 3*mt*p*p*(ey+55) + p*p*p*ey;
+          const fade = Math.max(0, 1 - Math.abs(p - prog) * 10);
+          if (fade > 0) {
+            ctx.beginPath(); ctx.arc(bx, by, 1.2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${col},${fade * .2})`; ctx.fill();
+          }
+        }
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ── Scroll Reveal ───────────────────────────────────────────── */
+  const revObs = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: .1 });
+  document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+  /* ── Hamburger ───────────────────────────────────────────────── */
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+
+  /* ── Phone auto-format: 1234567890 → 123-456-7890 ───────────── */
+  const phoneInput = document.getElementById('phone');
+  phoneInput.addEventListener('input', () => {
+    let v = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+    if      (v.length > 6) v = v.slice(0,3) + '-' + v.slice(3,6) + '-' + v.slice(6);
+    else if (v.length > 3) v = v.slice(0,3) + '-' + v.slice(3);
+    phoneInput.value = v;
+  });
+
+  /* ── Client-side form validation ────────────────────────────── */
+  const testForm  = document.getElementById('test-form');
+  const fnEl      = document.getElementById('first_name');
+  const lnEl      = document.getElementById('last_name');
+  const emEl      = document.getElementById('email');
+  const phEl      = document.getElementById('phone');
+  const submitBtn = document.getElementById('submit-btn');
+  const btnText   = document.getElementById('btn-text');
+
+  function setErr(input, msgId, show) {
+    input.classList.toggle('invalid', show);
+    document.getElementById(msgId).classList.toggle('show', show);
+  }
+  [fnEl, lnEl, emEl, phEl].forEach((el, i) => {
+    const ids = ['err-fn', 'err-ln', 'err-em', 'err-ph'];
+    el.addEventListener('input', () => setErr(el, ids[i], false));
+  });
+
+  testForm.addEventListener('submit', function (e) {
+    let ok = true;
+    if (!fnEl.value.trim())                             { setErr(fnEl,'err-fn',true); ok=false; } else setErr(fnEl,'err-fn',false);
+    if (!lnEl.value.trim())                             { setErr(lnEl,'err-ln',true); ok=false; } else setErr(lnEl,'err-ln',false);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emEl.value)){ setErr(emEl,'err-em',true); ok=false; } else setErr(emEl,'err-em',false);
+    if (!/^\d{3}-\d{3}-\d{4}$/.test(phEl.value))       { setErr(phEl,'err-ph',true); ok=false; } else setErr(phEl,'err-ph',false);
+    if (!ok) { e.preventDefault(); return; }
+    // Show loading state while form submits
+    submitBtn.disabled = true;
+    btnText.textContent = 'Launching…';
+  });
+
+  /* ═══════════════════════════════════════════════════════════════
+     STATUS ROUTING
+     ═══════════════════════════════════════════════════════════════
+     The server (test.js) currently redirects to /status?email=...
+     and sends plain HTML responses.
+
+     TO USE THESE STYLED PAGES, update test.js /status route to:
+
+       if (user.status === 'success') {
+         return res.redirect('/test?status=success');
+       } else if (user.status === 'failed') {
+         return res.redirect('/test?status=failed');
+       } else {
+         return res.redirect('/test?status=waiting&email=' + encodeURIComponent(email));
+       }
+
+     This JS reads ?status= and renders the correct panel.
+     The waiting state auto-reloads every 5 s so the result
+     appears without any user action.
+  ═══════════════════════════════════════════════════════════════ */
+
+  const stateForm    = document.getElementById('state-form');
+  const stateWaiting = document.getElementById('state-waiting');
+  const stateSuccess = document.getElementById('state-success');
+  const stateFailed  = document.getElementById('state-failed');
+
+  /* Progress-bar step elements */
+  const ps = [null,
+    document.getElementById('ps1'), document.getElementById('ps2'),
+    document.getElementById('ps3'), document.getElementById('ps4'),
+    document.getElementById('ps5'),
+  ];
+  const pc = [null,
+    document.getElementById('pc1'), document.getElementById('pc2'),
+    document.getElementById('pc3'), document.getElementById('pc4'),
+  ];
+
+  function setStep(activeIdx) {
+    for (let i = 1; i <= 5; i++) {
+      if (!ps[i]) continue;
+      const hex = ps[i].querySelector('.prog-hex');
+      if (i < activeIdx) {
+        ps[i].className = 'prog-step done';
+        hex.textContent = '✓';
+      } else if (i === activeIdx) {
+        ps[i].className = 'prog-step active';
+        hex.textContent = '0' + i;
+      } else {
+        ps[i].className = 'prog-step';
+        hex.textContent = '0' + i;
+      }
+    }
+    for (let i = 1; i <= 4; i++) {
+      if (!pc[i]) continue;
+      pc[i].classList.toggle('lit', i < activeIdx);
+    }
+  }
+
+  function activateState(name) {
+    [stateForm, stateWaiting, stateSuccess, stateFailed].forEach(el => {
+      el.classList.remove('active');
+    });
+    if (name === 'form') {
+      stateForm.classList.add('active');
+      setStep(3);
+    } else if (name === 'waiting') {
+      stateWaiting.classList.add('active');
+      setStep(4);
+      startWaitTimer();
+      // Trigger scroll-reveal on newly visible elements
+      stateWaiting.querySelectorAll('.reveal').forEach(el => {
+        setTimeout(() => el.classList.add('vis'), 50);
+      });
+      // Auto-reload every 5 s to poll for result
+      setTimeout(() => location.reload(), 5000);
+    } else if (name === 'success') {
+      stateSuccess.classList.add('active');
+      setStep(6); // all done
+      stateSuccess.querySelectorAll('.reveal').forEach(el => {
+        setTimeout(() => el.classList.add('vis'), 50);
+      });
+      // Animate score bar
+      setTimeout(() => document.getElementById('score-fill').classList.add('go'), 300);
+    } else if (name === 'failed') {
+      stateFailed.classList.add('active');
+      setStep(5);
+      stateFailed.querySelectorAll('.reveal').forEach(el => {
+        setTimeout(() => el.classList.add('vis'), 50);
+      });
+    }
+  }
+
+  /* Read ?status= query param */
+  const urlStatus = new URLSearchParams(window.location.search).get('status');
+  if      (urlStatus === 'waiting' || urlStatus === 'pending') activateState('waiting');
+  else if (urlStatus === 'success')                            activateState('success');
+  else if (urlStatus === 'failed')                             activateState('failed');
+  else                                                         activateState('form');
+
+  /* ── Waiting timer ───────────────────────────────────────────── */
+  function startWaitTimer() {
+    const el = document.getElementById('wait-timer');
+    if (!el) return;
+    let total = 0;
+    setInterval(() => {
+      total++;
+      const m = Math.floor(total / 60);
+      const s = String(total % 60).padStart(2, '0');
+      el.textContent = `${m}:${s}`;
+    }, 1000);
+  }
+  </script>
+
+</body>
+</html>

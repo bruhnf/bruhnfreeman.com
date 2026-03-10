@@ -1,0 +1,116 @@
+# Environment variables (beyond just .env)
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS-specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+ehthumbs.db
+Desktop.ini
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Temp files
+*.tmp
+*.temp
+*~
+
+# Lock files (if not needed)
+package-lock.json  # Optional: Ignore if you prefer yarn.lock or want to avoid lockfile commits
+yarn.lock  # Optional: Vice versa
+
+# Other common
+node_repl_history
+.tern-port
+
+# MongoDB data directories (if mounted locally)
+data/
+db/
+mongodb/data/
+mongodb/db/
+
+# MongoDB logs
+mongod.log
+mongodb/data/log/*
+mongodb/data/**/*.log
+
+# MongoDB dumps/backups
+dump/
+mongodump/
+*.bson
+*.metadata.json
+
+# Docker ignore files (if not version-controlled)
+.dockerignore
+
+# Docker build caches or temp files
+*.docker-sync
+.docker/
+
+# Local volumes (if persisting data outside container for dev)
+volumes/
+
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Coverage directories
+coverage
+*.lcov
+.nyc_output
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Compiled/output directories
+dist
+build
+out
+.next  # If using Next.js
+.nuxt  # If using Nuxt.js
+
+# Parcel cache (if using Parcel)
+.cache
+.parcel-cache
+
+# Yarn v2/v3 files (if using Yarn)
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Bruhnssssss Stuffffff
+prompt.txt

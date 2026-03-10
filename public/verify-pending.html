@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhoneTester — Check Your Email</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --cyan: #00d4ff;
+            --blue: #3b82f6;
+            --mag: #c040ff;
+            --bg: #03050f;
+            --panel-s: rgba(8, 14, 35, .95);
+            --border: rgba(0, 212, 255, .18);
+            --white-s: #e8eaf6;
+            --text3: rgba(180, 190, 220, .45);
+            --fm: 'Orbitron', monospace;
+            --fd: 'Inter', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--white-s);
+            font-family: var(--fd);
+        }
+
+        /* ── Star canvas bg ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59, 130, 246, .15) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 110%, rgba(192, 64, 255, .10) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--panel-s);
+            border: 1px solid var(--border);
+            max-width: 520px;
+            width: 100%;
+            padding: 52px 44px;
+            box-shadow: 0 0 80px rgba(0, 212, 255, .07), 0 0 160px rgba(192, 64, 255, .04);
+            text-align: center;
+        }
+
+        .card-bar {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan), var(--mag));
+            margin-bottom: 36px;
+        }
+
+        /* ── Icon ── */
+        .icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, .08);
+            border: 1px solid rgba(0, 212, 255, .25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            font-size: 2rem;
+            animation: pulse 2.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, .25);
+            }
+
+            50% {
+                box-shadow: 0 0 0 14px rgba(0, 212, 255, .0);
+            }
+        }
+
+        /* ── Typography ── */
+        .label {
+            font-family: var(--fm);
+            font-size: .62rem;
+            letter-spacing: .2em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: var(--white-s);
+            margin-bottom: 18px;
+            line-height: 1.25;
+        }
+
+        .desc {
+            font-size: .95rem;
+            line-height: 1.75;
+            color: rgba(180, 190, 220, .75);
+            margin-bottom: 10px;
+        }
+
+        .email-display {
+            font-family: var(--fm);
+            font-size: .82rem;
+            color: var(--cyan);
+            letter-spacing: .06em;
+            margin-bottom: 32px;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 32px 0;
+        }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border: none;
+            cursor: pointer;
+            font-family: var(--fm);
+            font-weight: 700;
+            font-size: .78rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #000;
+            text-decoration: none;
+            transition: opacity .2s, transform .15s;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            display: block;
+            width: 100%;
+            padding: 13px 0;
+            background: none;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-family: var(--fm);
+            font-weight: 600;
+            font-size: .72rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(180, 190, 220, .65);
+            text-decoration: none;
+            transition: border-color .2s, color .2s;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* ── Hint text ── */
+        .hint {
+            margin-top: 24px;
+            font-family: var(--fm);
+            font-size: .6rem;
+            letter-spacing: .1em;
+            color: var(--text3);
+            line-height: 1.9;
+        }
+
+        .hint a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .hint a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Resend feedback ── */
+        #resend-msg {
+            display: none;
+            margin-top: 10px;
+            font-family: var(--fm);
+            font-size: .62rem;
+            letter-spacing: .1em;
+            color: var(--cyan);
+        }
+
+        /* Logo link top-left */
+        .logo-link {
+            position: fixed;
+            top: 22px;
+            left: 28px;
+            z-index: 10;
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: .85rem;
+            letter-spacing: .15em;
+            color: var(--cyan);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .logo-link:hover {
+            opacity: .75;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/" class="logo-link">BF // PhoneTester</a>
+
+    <div class="page">
+        <div class="card">
+            <div class="card-bar"></div>
+
+            <div class="icon-wrap">📧</div>
+
+            <div class="label">// Account Initialization</div>
+            <h1>Check Your<br />Email</h1>
+
+            <p class="desc">
+                We've sent a verification link to:
+            </p>
+            <div class="email-display" id="email-display">—</div>
+
+            <p class="desc">
+                Click the link in that email to activate your account.
+                Once verified, you'll be able to sign in and launch your first PhoneTester session.
+            </p>
+
+            <div class="divider"></div>
+
+            <!-- Resend option -->
+            <button class="btn-primary" id="resend-btn" onclick="resendVerification()">
+                Resend Verification Email →
+            </button>
+            <div id="resend-msg">// Email sent — check your inbox again.</div>
+
+            <!-- Return to home -->
+            <a href="/" class="btn-ghost">Return to Home Page</a>
+
+            <div class="hint">
+                Didn't receive it? Check your spam folder.<br />
+                Link expires in <strong style="color:var(--white-s)">24 hours</strong>.<br />
+                Need help? <a href="mailto:support@bruhnfreeman.com">support@bruhnfreeman.com</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pull email from query string and display it
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email') || '';
+        if (email) {
+            document.getElementById('email-display').textContent = email;
+        }
+
+        // Resend verification email via POST
+        async function resendVerification() {
+            const btn = document.getElementById('resend-btn');
+            const msg = document.getElementById('resend-msg');
+            if (!email) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            try {
+                const res = await fetch('/resend-verification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    msg.style.display = 'block';
+                    btn.textContent = 'Sent ✓';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Resend Verification Email →';
+                    alert(data.message || 'Could not resend. Please try again.');
+                }
+            } catch (e) {
+                btn.disabled = false;
+                btn.textContent = 'Resend Verification Email →';
+                alert('Network error. Please try again.');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

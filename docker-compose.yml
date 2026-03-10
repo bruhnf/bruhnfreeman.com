@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://localhost:27017/phonetester
+    env_file: .env
+    restart: unless-stopped
+volumes:
+  mongo-data:
