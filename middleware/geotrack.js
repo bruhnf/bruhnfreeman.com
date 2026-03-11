@@ -27,7 +27,7 @@ async function recordGeoLocation(req, userId, trigger) {
 
     // Skip private/local IPs
     if (!ip || ip === '::1' || ip.startsWith('127.') || ip.startsWith('10.')
-        || ip.startsWith('172.') || ip.startsWith('192.168.')) {
+        || ip.startsWith('192.168.')) {
       return;
     }
 
