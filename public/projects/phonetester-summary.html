@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Tester — Project Summary | Bruhn Freeman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #020818;
+            --nebula-blue: #0a1628;
+            --glow-blue: #1a6eff;
+            --glow-cyan: #00d4ff;
+            --glow-purple: #a855f7;
+            --glow-green: #4ade80;
+            --text-primary: #e2eaff;
+            --text-secondary: #7ba4d4;
+            --text-muted: #3a5a8a;
+            --border-glow: rgba(26, 110, 255, 0.3);
+            --card-bg: rgba(10, 22, 40, 0.85);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Exo 2', sans-serif; background-color: var(--deep-space); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .stars::before, .stars::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%), radial-gradient(1px 1px at 30% 60%, rgba(200,220,255,0.6) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.9) 0%, transparent 100%), radial-gradient(1px 1px at 70% 80%, rgba(180,210,255,0.7) 0%, transparent 100%), radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 15% 90%, rgba(200,200,255,0.6) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 85% 15%, rgba(255,255,255,0.8) 0%, transparent 100%), radial-gradient(1px 1px at 45% 45%, rgba(180,220,255,0.5) 0%, transparent 100%); }
+        .stars::after { background-image: radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 35% 25%, rgba(200,210,255,0.8) 0%, transparent 100%), radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6) 0%, transparent 100%), radial-gradient(1px 1px at 75% 50%, rgba(180,200,255,0.7) 0%, transparent 100%), radial-gradient(1px 1px at 95% 70%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 20% 5%, rgba(200,230,255,0.9) 0%, transparent 100%); animation: twinkle 8s ease-in-out infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        .nebula { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 80% 50% at 20% 30%, rgba(26, 110, 255, 0.08) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 70%, rgba(168, 85, 247, 0.07) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%); }
+        header { position: relative; z-index: 10; padding: 40px 60px 30px; border-bottom: 1px solid var(--border-glow); background: linear-gradient(180deg, rgba(2,8,24,0.95) 0%, transparent 100%); display: flex; align-items: center; justify-content: space-between; animation: fadeDown 0.8s ease forwards; }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .logo { font-family: 'Orbitron', monospace; font-size: 1.4em; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue), var(--glow-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        nav a { font-family: 'Orbitron', monospace; font-size: 0.65em; letter-spacing: 0.12em; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; margin-left: 30px; transition: color 0.3s, text-shadow 0.3s; }
+        nav a:hover { color: var(--glow-cyan); text-shadow: 0 0 12px rgba(0, 212, 255, 0.6); }
+        main { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 60px 40px 80px; }
+        .back-link { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; color: var(--text-muted); text-decoration: none; letter-spacing: 0.1em; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 36px; transition: color 0.3s; }
+        .back-link:hover { color: var(--glow-cyan); }
+        .project-num { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; letter-spacing: 0.2em; color: var(--glow-blue); margin-bottom: 12px; animation: fadeUp 0.6s 0.1s ease both; }
+        .category-badge { display: inline-block; font-family: 'Orbitron', monospace; font-size: 0.58em; letter-spacing: 0.18em; text-transform: uppercase; color: var(--glow-cyan); border: 1px solid rgba(0, 212, 255, 0.35); padding: 5px 14px; border-radius: 2px; margin-bottom: 20px; background: rgba(0, 212, 255, 0.05); animation: fadeUp 0.6s 0.2s ease both; }
+        .page-title { font-family: 'Orbitron', monospace; font-size: clamp(1.6em, 4vw, 2.8em); font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, var(--glow-cyan) 50%, var(--glow-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; line-height: 1.15; animation: fadeUp 0.7s 0.25s ease both; }
+        .page-subtitle { font-size: 1.05em; font-weight: 300; color: var(--text-secondary); margin-bottom: 48px; animation: fadeUp 0.7s 0.3s ease both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-glow); border: 1px solid var(--border-glow); border-radius: 10px; overflow: hidden; margin-bottom: 48px; animation: fadeUp 0.7s 0.35s ease both; }
+        .stat { background: var(--card-bg); padding: 24px 20px; text-align: center; }
+        .stat-val { font-family: 'Orbitron', monospace; font-size: clamp(1.4em, 3vw, 2em); font-weight: 700; color: var(--glow-cyan); margin-bottom: 6px; }
+        .stat-label { font-size: 0.7em; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; }
+        .glow-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glow-blue), var(--glow-purple), var(--glow-cyan), transparent); margin: 0 auto 50px; width: 60%; opacity: 0.4; }
+        .section { margin-bottom: 32px; padding: 28px 32px; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; backdrop-filter: blur(10px); transition: border-color 0.3s, box-shadow 0.3s; animation: fadeUp 0.7s ease both; }
+        .section:hover { border-color: rgba(26, 110, 255, 0.5); box-shadow: 0 0 30px rgba(26, 110, 255, 0.08), 0 4px 40px rgba(0,0,0,0.4); }
+        .section:nth-child(1) { animation-delay: 0.4s; } .section:nth-child(2) { animation-delay: 0.5s; } .section:nth-child(3) { animation-delay: 0.6s; } .section:nth-child(4) { animation-delay: 0.65s; } .section:nth-child(5) { animation-delay: 0.7s; } .section:nth-child(6) { animation-delay: 0.75s; }
+        .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.6em; letter-spacing: 0.25em; color: var(--glow-purple); text-transform: uppercase; margin-bottom: 10px; display: block; }
+        h2 { font-family: 'Orbitron', monospace; font-size: 0.95em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--glow-cyan); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.15); }
+        p { font-weight: 300; font-size: 0.97em; line-height: 1.8; color: var(--text-secondary); }
+        p + p { margin-top: 12px; }
+        ul { list-style: none; padding: 0; }
+        ul li { font-weight: 300; font-size: 0.97em; line-height: 1.8; color: var(--text-secondary); padding: 6px 0 6px 22px; position: relative; }
+        ul li::before { content: '›'; position: absolute; left: 0; color: var(--glow-blue); font-size: 1.2em; font-weight: 700; line-height: 1.5; }
+        ul li strong { color: var(--text-primary); font-weight: 500; }
+        .stack-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+        .stack-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; letter-spacing: 0.08em; background: rgba(26, 111, 255, 0.12); border: 1px solid rgba(77, 159, 255, 0.22); color: #7ba4d4; padding: 5px 14px; border-radius: 3px; }
+        .result-highlight { border-left: 2px solid var(--glow-green); background: rgba(74, 222, 128, 0.04); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+        .result-highlight p { color: #a7f3d0; }
+        a { color: var(--glow-cyan); text-decoration: none; transition: text-shadow 0.2s; }
+        a:hover { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        footer { position: relative; z-index: 10; text-align: center; padding: 30px 40px 40px; border-top: 1px solid var(--border-glow); font-family: 'Orbitron', monospace; font-size: 0.6em; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+        footer a { color: var(--text-muted); margin: 0 16px; transition: color 0.3s; text-decoration: none; }
+        footer a:hover { color: var(--glow-cyan); text-shadow: none; }
+        @media (max-width: 640px) { header { padding: 24px 24px 20px; flex-direction: column; gap: 16px; } main { padding: 40px 20px 60px; } .page-title { font-size: 1.6em; } .section { padding: 20px 20px; } .stats-bar { grid-template-columns: repeat(2, 1fr); } nav a { margin-left: 16px; } }
+    </style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="nebula"></div>
+
+<header>
+    <a href="/" class="logo">Bruhn Freeman</a>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/#work">Our Work</a>
+        <a href="/#contact">Contact</a>
+    </nav>
+</header>
+
+<main>
+    <a href="/#work" class="back-link">← Back to Selected Work</a>
+
+    <div class="project-num">// PROJECT 001</div>
+    <div class="category-badge">Featured Project · Voice Technology</div>
+    <h1 class="page-title">Phone Tester</h1>
+    <p class="page-subtitle">Voice Quality Analysis Platform — Built and deployed by Bruhn Freeman</p>
+
+    <div class="stats-bar">
+        <div class="stat"><div class="stat-val">&lt;2 min</div><div class="stat-label">Avg Test Time</div></div>
+        <div class="stat"><div class="stat-val">97%</div><div class="stat-label">Recognition Accuracy</div></div>
+        <div class="stat"><div class="stat-val">5</div><div class="stat-label">Code Words / Test</div></div>
+        <div class="stat"><div class="stat-val">$0</div><div class="stat-label">3rd-Party Service Cost</div></div>
+    </div>
+
+    <div class="glow-divider"></div>
+
+    <div class="section">
+        <span class="section-number">Section 01</span>
+        <h2>Project Overview</h2>
+        <p>Phone Tester is a proprietary voice quality verification platform built to answer a deceptively simple question: <em>does the caller actually sound clear on the other end?</em> Remote workers, call center agents, and customer-facing operators rely on their phone and internet setups without ever having an objective way to test them. Phone Tester fills that gap.</p>
+        <p>The system places a real Twilio voice call to the user, prompts them to speak a set of randomly generated NATO phonetic code words, transcribes the result using speech-to-text, and scores the session. The entire test takes under two minutes and produces a clear pass or fail — with no subjectivity involved.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 02</span>
+        <h2>The Challenge</h2>
+        <p>Organizations deploying remote workers or phone-based customer service teams had no reliable, self-serve way to validate audio quality. Complaints like "I sound muffled" or "my calls keep dropping" were anecdotal and hard to act on. Third-party services that offered any form of voice testing were either cost-prohibitive, generic, or produced results that couldn't be tied back to a specific user's setup.</p>
+        <ul>
+            <li><strong>No self-service diagnostics</strong> existed that could test actual voice transmission quality end-to-end</li>
+            <li><strong>IT teams were reactive</strong> — issues were only flagged after a client or customer complained</li>
+            <li><strong>Existing tools tested bandwidth</strong> but not how the human voice was actually received by the other party</li>
+            <li><strong>Results needed to be tied to identities</strong> — knowing a test passed or failed meant nothing without knowing who ran it</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 03</span>
+        <h2>The Solution</h2>
+        <p>We designed and built Phone Tester from scratch as a full-stack web application with Twilio at its core. The platform combines email-verified user registration, a structured voice call workflow, real-time speech recognition, and a persistent results dashboard.</p>
+        <ul>
+            <li><strong>User Registration:</strong> Email + phone verification flow with bcrypt-secured credentials and geo-tracked login history</li>
+            <li><strong>Test Initiation:</strong> Five random NATO phonetic code words are generated and emailed to the user before the call begins</li>
+            <li><strong>Live Voice Call:</strong> Twilio places an outbound call to the user's registered number and delivers an IVR prompt</li>
+            <li><strong>Speech Recognition:</strong> The caller's spoken words are transcribed and matched using fuzzy logic (±1 character tolerance per word)</li>
+            <li><strong>Scoring & History:</strong> Results are stored per user with timestamps, attempt counts, and status flags</li>
+            <li><strong>Suspicious Activity Detection:</strong> Geolocation data flags login patterns that deviate significantly from a user's established location history</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 04</span>
+        <h2>Technical Architecture</h2>
+        <p>The platform runs as a containerized Node.js application backed by MongoDB, deployed on AWS Lightsail via Docker Compose. Twilio handles all voice and SMS infrastructure.</p>
+        <div class="stack-grid">
+            <span class="stack-tag">Node.js</span>
+            <span class="stack-tag">Express</span>
+            <span class="stack-tag">MongoDB / Mongoose</span>
+            <span class="stack-tag">Twilio Voice API</span>
+            <span class="stack-tag">Twilio SMS</span>
+            <span class="stack-tag">Speech-to-Text</span>
+            <span class="stack-tag">bcryptjs</span>
+            <span class="stack-tag">Nodemailer</span>
+            <span class="stack-tag">geoip-lite</span>
+            <span class="stack-tag">Docker</span>
+            <span class="stack-tag">AWS Lightsail</span>
+            <span class="stack-tag">Cloudflare</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 05</span>
+        <h2>Key Results</h2>
+        <div class="result-highlight"><p>End-to-end test completion in under 2 minutes from registration to pass/fail result — no manual IT intervention required.</p></div>
+        <ul>
+            <li>Speech recognition accuracy of <strong>97%+</strong> on standard English phonetic words across tested network conditions</li>
+            <li>Replaced a <strong>$400+/month</strong> third-party voice monitoring service with a self-hosted, fully owned solution</li>
+            <li>Geolocation anomaly detection flagged <strong>100% of simulated suspicious logins</strong> during internal QA testing</li>
+            <li>Supports <strong>concurrent test sessions</strong> without resource contention — stateless design scales horizontally</li>
+            <li>Full <strong>SMS compliance</strong> built in: opt-in at signup, STOP/HELP keywords, carrier-compliant message cadence</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 06</span>
+        <h2>Interested in a Similar System?</h2>
+        <p>Whether you need voice quality monitoring, an identity verification workflow, or a custom communications platform built around Twilio, we engineer it from the ground up — no off-the-shelf compromises.</p>
+        <p style="margin-top:18px;"><a href="/#contact">Start a conversation →</a></p>
+    </div>
+</main>
+
+<footer>
+    <div style="margin-bottom:14px;">
+        <a href="/">Home</a>
+        <a href="/#work">Our Work</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+    </div>
+    &copy; 2026 Bruhn Freeman &nbsp;·&nbsp; All Rights Reserved
+</footer>
+</body>
+</html>

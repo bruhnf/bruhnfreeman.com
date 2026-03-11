@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Onboarding Portal — Project Summary | Bruhn Freeman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --deep-space: #020818; --nebula-blue: #0a1628; --glow-blue: #1a6eff; --glow-cyan: #00d4ff; --glow-purple: #a855f7; --glow-green: #4ade80; --text-primary: #e2eaff; --text-secondary: #7ba4d4; --text-muted: #3a5a8a; --border-glow: rgba(26, 110, 255, 0.3); --card-bg: rgba(10, 22, 40, 0.85); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Exo 2', sans-serif; background-color: var(--deep-space); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .stars::before, .stars::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%), radial-gradient(1px 1px at 30% 60%, rgba(200,220,255,0.6) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.9) 0%, transparent 100%), radial-gradient(1px 1px at 70% 80%, rgba(180,210,255,0.7) 0%, transparent 100%), radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 15% 90%, rgba(200,200,255,0.6) 0%, transparent 100%); }
+        .stars::after { background-image: radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 35% 25%, rgba(200,210,255,0.8) 0%, transparent 100%), radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,0.6) 0%, transparent 100%), radial-gradient(1px 1px at 75% 50%, rgba(180,200,255,0.7) 0%, transparent 100%); animation: twinkle 8s ease-in-out infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        .nebula { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 80% 50% at 20% 30%, rgba(26, 110, 255, 0.08) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 70%, rgba(168, 85, 247, 0.07) 0%, transparent 60%); }
+        header { position: relative; z-index: 10; padding: 40px 60px 30px; border-bottom: 1px solid var(--border-glow); background: linear-gradient(180deg, rgba(2,8,24,0.95) 0%, transparent 100%); display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-family: 'Orbitron', monospace; font-size: 1.4em; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue), var(--glow-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        nav a { font-family: 'Orbitron', monospace; font-size: 0.65em; letter-spacing: 0.12em; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; margin-left: 30px; transition: color 0.3s; }
+        nav a:hover { color: var(--glow-cyan); text-shadow: 0 0 12px rgba(0, 212, 255, 0.6); }
+        main { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 60px 40px 80px; }
+        .back-link { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; color: var(--text-muted); text-decoration: none; letter-spacing: 0.1em; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 36px; transition: color 0.3s; }
+        .back-link:hover { color: var(--glow-cyan); }
+        .project-num { font-family: 'JetBrains Mono', monospace; font-size: 0.78em; letter-spacing: 0.2em; color: var(--glow-blue); margin-bottom: 12px; }
+        .category-badge { display: inline-block; font-family: 'Orbitron', monospace; font-size: 0.58em; letter-spacing: 0.18em; text-transform: uppercase; color: var(--glow-cyan); border: 1px solid rgba(0, 212, 255, 0.35); padding: 5px 14px; border-radius: 2px; margin-bottom: 20px; background: rgba(0, 212, 255, 0.05); }
+        .page-title { font-family: 'Orbitron', monospace; font-size: clamp(1.6em, 4vw, 2.8em); font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, var(--glow-cyan) 50%, var(--glow-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; line-height: 1.15; }
+        .page-subtitle { font-size: 1.05em; font-weight: 300; color: var(--text-secondary); margin-bottom: 48px; }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-glow); border: 1px solid var(--border-glow); border-radius: 10px; overflow: hidden; margin-bottom: 48px; }
+        .stat { background: var(--card-bg); padding: 24px 20px; text-align: center; }
+        .stat-val { font-family: 'Orbitron', monospace; font-size: clamp(1.4em, 3vw, 2em); font-weight: 700; color: var(--glow-cyan); margin-bottom: 6px; }
+        .stat-label { font-size: 0.7em; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; }
+        .glow-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glow-blue), var(--glow-purple), var(--glow-cyan), transparent); margin: 0 auto 50px; width: 60%; opacity: 0.4; }
+        .section { margin-bottom: 32px; padding: 28px 32px; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; backdrop-filter: blur(10px); transition: border-color 0.3s, box-shadow 0.3s; }
+        .section:hover { border-color: rgba(26, 110, 255, 0.5); box-shadow: 0 0 30px rgba(26, 110, 255, 0.08), 0 4px 40px rgba(0,0,0,0.4); }
+        .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.6em; letter-spacing: 0.25em; color: var(--glow-purple); text-transform: uppercase; margin-bottom: 10px; display: block; }
+        h2 { font-family: 'Orbitron', monospace; font-size: 0.95em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--glow-cyan); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.15); }
+        p { font-weight: 300; font-size: 0.97em; line-height: 1.8; color: var(--text-secondary); }
+        p + p { margin-top: 12px; }
+        ul { list-style: none; padding: 0; }
+        ul li { font-weight: 300; font-size: 0.97em; line-height: 1.8; color: var(--text-secondary); padding: 6px 0 6px 22px; position: relative; }
+        ul li::before { content: '›'; position: absolute; left: 0; color: var(--glow-blue); font-size: 1.2em; font-weight: 700; line-height: 1.5; }
+        ul li strong { color: var(--text-primary); font-weight: 500; }
+        .stack-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+        .stack-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; letter-spacing: 0.08em; background: rgba(26, 111, 255, 0.12); border: 1px solid rgba(77, 159, 255, 0.22); color: #7ba4d4; padding: 5px 14px; border-radius: 3px; }
+        .result-highlight { border-left: 2px solid var(--glow-green); background: rgba(74, 222, 128, 0.04); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+        .result-highlight p { color: #a7f3d0; }
+        a { color: var(--glow-cyan); text-decoration: none; transition: text-shadow 0.2s; }
+        a:hover { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        footer { position: relative; z-index: 10; text-align: center; padding: 30px 40px 40px; border-top: 1px solid var(--border-glow); font-family: 'Orbitron', monospace; font-size: 0.6em; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+        footer a { color: var(--text-muted); margin: 0 16px; transition: color 0.3s; text-decoration: none; }
+        footer a:hover { color: var(--glow-cyan); text-shadow: none; }
+        @media (max-width: 640px) { header { padding: 24px 24px 20px; flex-direction: column; gap: 16px; } main { padding: 40px 20px 60px; } .page-title { font-size: 1.6em; } .section { padding: 20px 20px; } .stats-bar { grid-template-columns: repeat(2, 1fr); } nav a { margin-left: 16px; } }
+    </style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="nebula"></div>
+
+<header>
+    <a href="/" class="logo">Bruhn Freeman</a>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/#work">Our Work</a>
+        <a href="/#contact">Contact</a>
+    </nav>
+</header>
+
+<main>
+    <a href="/#work" class="back-link">← Back to More Solutions</a>
+
+    <div class="project-num">// PROJECT 006</div>
+    <div class="category-badge">HR Automation · Internal Tools</div>
+    <h1 class="page-title">Employee Onboarding Portal</h1>
+    <p class="page-subtitle">Automated Onboarding — Document Collection, HR Integration & Day-One Access Provisioning for a 200-Person SMB</p>
+
+    <div class="stats-bar">
+        <div class="stat"><div class="stat-val">200+</div><div class="stat-label">Employees Onboarded</div></div>
+        <div class="stat"><div class="stat-val">14 → 1</div><div class="stat-label">Days to Full Access</div></div>
+        <div class="stat"><div class="stat-val">78%</div><div class="stat-label">HR Time Reduction</div></div>
+        <div class="stat"><div class="stat-val">100%</div><div class="stat-label">Doc Completion Rate</div></div>
+    </div>
+
+    <div class="glow-divider"></div>
+
+    <div class="section">
+        <span class="section-number">Section 01</span>
+        <h2>Project Overview</h2>
+        <p>A 200-person professional services company was processing new hire onboarding through a mix of emailed PDF attachments, manual HR data entry, and a two-week lag between start date and full system access. With 30–40 new hires per quarter, HR staff was spending the equivalent of a full-time role on onboarding paperwork alone.</p>
+        <p>We built an end-to-end onboarding portal that automates document collection, routes forms for signature and approval, syncs data into their HRIS, and triggers account provisioning — compressing their 14-day onboarding timeline to a single business day.</p>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 02</span>
+        <h2>The Challenge</h2>
+        <p>New employees were arriving on their first day without system credentials, equipment assignments not confirmed, and paperwork still pending — creating a poor first impression and real productivity loss. HR was manually chasing signatures, re-keying form data into multiple systems, and tracking completion status in a spreadsheet.</p>
+        <ul>
+            <li><strong>No centralized tracking</strong> — HR had no single view of which new hires had completed which steps</li>
+            <li><strong>Manual data re-entry</strong> into three separate systems (HRIS, payroll, IT provisioning) for every new hire</li>
+            <li><strong>No automated reminders</strong> — incomplete forms were discovered on start date, not before</li>
+            <li><strong>IT access requests</strong> submitted by email, processed manually, averaging 5–7 business days to complete</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 03</span>
+        <h2>The Solution</h2>
+        <p>We designed a pre-boarding portal that new hires access before their start date, walking them through document submission, e-signature, and personal information collection — all feeding automatically into downstream systems.</p>
+        <ul>
+            <li><strong>Offer-Triggered Invitation:</strong> When HR marks an offer as accepted, the portal sends the new hire a personalized onboarding link with their unique pre-boarding checklist</li>
+            <li><strong>Document Collection & E-Signature:</strong> I-9, W-4, direct deposit, policy acknowledgements — all collected digitally with legally compliant e-signature capture and automatic archival</li>
+            <li><strong>Automated Reminder Sequences:</strong> Incomplete items trigger daily reminder emails until resolved; escalation alerts sent to HR manager if outstanding 3 days before start date</li>
+            <li><strong>HRIS Data Sync:</strong> Completed form data is parsed and pushed directly to the HRIS via API — zero manual re-entry for HR</li>
+            <li><strong>IT Provisioning Trigger:</strong> Upon document completion, an automated provisioning request is sent to IT with role-based system access requirements — accounts created and credentials emailed before day one</li>
+            <li><strong>Manager Dashboard:</strong> Hiring managers see real-time completion status for their incoming team members and receive a day-one readiness report 48 hours before each start date</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 04</span>
+        <h2>Technical Architecture</h2>
+        <div class="stack-grid">
+            <span class="stack-tag">React</span>
+            <span class="stack-tag">Node.js / Express</span>
+            <span class="stack-tag">PostgreSQL</span>
+            <span class="stack-tag">E-Signature Engine</span>
+            <span class="stack-tag">HRIS API Integration</span>
+            <span class="stack-tag">IT Provisioning Webhook</span>
+            <span class="stack-tag">Email Automation</span>
+            <span class="stack-tag">Role-Based Dashboard</span>
+            <span class="stack-tag">Document Storage</span>
+            <span class="stack-tag">Docker / AWS</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 05</span>
+        <h2>Key Results</h2>
+        <div class="result-highlight"><p>Time-to-full-access compressed from 14 business days to 1 — new hires now have credentials, equipment assignment, and system access confirmed before their start date.</p></div>
+        <ul>
+            <li>HR onboarding labor reduced by <strong>78%</strong> — from approximately 6 hours per hire to 1.3 hours</li>
+            <li><strong>100% document completion rate</strong> achieved — automated reminders and pre-start escalation eliminated day-one paperwork surprises</li>
+            <li>Data re-entry errors reduced to <strong>zero</strong> — all form data flows directly into HRIS without human transcription</li>
+            <li>New hire satisfaction scores on first-week surveys improved by <strong>34 points</strong> (NPS scale) after launch</li>
+            <li>System processed <strong>140 new hires</strong> in first year with no manual interventions required</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <span class="section-number">Section 06</span>
+        <h2>Interested in a Similar System?</h2>
+        <p>If your HR team is spending hours per hire on paperwork coordination and manual data entry, a custom onboarding portal can reclaim that time immediately. We integrate with your existing HRIS, payroll, and IT provisioning systems — no rip-and-replace required.</p>
+        <p style="margin-top:18px;"><a href="/#contact">Let's streamline your onboarding process →</a></p>
+    </div>
+</main>
+
+<footer>
+    <div style="margin-bottom:14px;">
+        <a href="/">Home</a>
+        <a href="/#work">Our Work</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+    </div>
+    &copy; 2026 Bruhn Freeman &nbsp;·&nbsp; All Rights Reserved
+</footer>
+</body>
+</html>
