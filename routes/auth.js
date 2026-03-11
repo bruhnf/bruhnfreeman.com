@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const path = require('path');
 const User = require('../models/user');
 const { sendVerificationEmail } = require('../comms');
+const { recordGeoLocation } = require('../middleware/geotrack');
 
 function normalizePhone(phone) {
   // Remove non-digits
@@ -114,6 +115,7 @@ router.post('/login', [
       return res.redirect('/?open=login&error=not-verified');
     }
     req.session.userId = user._id.toString();
+    recordGeoLocation(req, user._id, 'login');
     console.log(`User logged in: ${identifier}`);
     res.redirect('/?login=success');
   } catch (err) {

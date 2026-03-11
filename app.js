@@ -7,7 +7,6 @@ const authRouter = require('./routes/auth');
 const testRouter = require('./routes/test');
 const { handleCall } = require('./voice');
 const isAuthenticated = require('./middleware/auth');
-const geoTrack = require('./middleware/geotrack');
 require('dotenv').config();
 
 const app = express();
@@ -19,9 +18,8 @@ app.use(session({
   saveUninitialized: false
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(geoTrack);
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://mongo:27017/phonetester')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/phonetester')
   .then(() => console.log('DB connected'))
   .catch(err => console.error('DB connection error:', err));
 

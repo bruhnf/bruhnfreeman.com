@@ -5,6 +5,7 @@ const User = require('../models/user');
 const { sendCodeEmail } = require('../comms');
 const { generateCodes } = require('../voice');
 const isAuthenticated = require('../middleware/auth');
+const { recordGeoLocation } = require('../middleware/geotrack');
 
 
 function normalizePhone(phone) {
@@ -54,6 +55,7 @@ router.post('/start-test', isAuthenticated, [
     user.status = 'verified'; // Ready for call
     user.attempts = 0;
     await user.save();
+    recordGeoLocation(req, user._id, 'test');
     await sendCodeEmail(user.email, user.codeWords);
     console.log(`Test initiated for user: ${user.email}`);
     res.redirect(`/status?email=${user.email}`);
