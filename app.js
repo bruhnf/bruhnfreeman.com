@@ -42,6 +42,10 @@ app.get('/privacy', (req, res) => {
 
 app.get('/terms', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+
+}); 
+app.get("/sms-compliance", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'sms-compliance.html'));
 });
 
 app.get('/me', (req, res) => {
