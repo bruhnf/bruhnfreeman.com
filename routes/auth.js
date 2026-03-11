@@ -81,6 +81,7 @@ router.get('/verify-email', async (req, res) => {
     user.emailToken = null;
     await user.save();
     req.session.userId = user._id.toString();
+    recordGeoLocation(req, user._id, 'login');
     console.log(`User verified and session started: ${email}`);
     res.redirect('/?verify=success');
   } catch (err) {
