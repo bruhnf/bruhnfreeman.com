@@ -21,6 +21,7 @@ function distanceMiles(lat1, lon1, lat2, lon2) {
 async function recordGeoLocation(req, userId, trigger) {
   try {
     // Get the real IP - handles Nginx proxy
+    console.log("GeoTrack IP debug:", req.headers["x-forwarded-for"], req.socket.remoteAddress);
     const ip = req.headers['x-forwarded-for']?.split(',')[0].trim()
                || req.socket.remoteAddress;
 
