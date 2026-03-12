@@ -430,6 +430,11 @@
                     </div>
                     <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp,image/gif" />
                     <div class="avatar-hint">Click photo to change<br />JPEG · PNG · WebP · GIF<br />Max 5 MB</div>
+                    <button type="button" id="remove-avatar-btn"
+                        style="display:none;margin-top:8px;background:none;border:none;cursor:pointer;font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:var(--red);opacity:.75;transition:opacity .2s;padding:0;"
+                        onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.75">
+                        // Remove photo
+                    </button>
                     <div class="avatar-status" id="avatar-status"></div>
                 </div>
 
@@ -573,13 +578,8 @@
                 updateBioCount();
 
                 // Avatar
-                const ring = document.getElementById('avatar-ring');
                 const initial = document.getElementById('avatar-initial');
-                if (d.avatarUrl) {
-                    initial.innerHTML = `<img src="${d.avatarUrl}" alt="${d.username}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
-                } else {
-                    initial.textContent = (d.username || d.firstName || '?').charAt(0).toUpperCase();
-                }
+                setAvatarDisplay(d.avatarUrl, d.username || d.firstName || '?');
 
                 // Identity meta panel
                 const joined = d.createdAt
@@ -652,9 +652,22 @@
             }
         });
 
+        // ── Avatar helpers ────────────────────────────────────────────────────
+        function setAvatarDisplay(avatarUrl, fallbackName) {
+            const initial   = document.getElementById('avatar-initial');
+            const removeBtn = document.getElementById('remove-avatar-btn');
+            if (avatarUrl) {
+                initial.innerHTML = `<img src="${avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+                removeBtn.style.display = 'block';
+            } else {
+                initial.textContent = String(fallbackName).charAt(0).toUpperCase();
+                removeBtn.style.display = 'none';
+            }
+        }
+
         // ── Avatar upload ─────────────────────────────────────────────────────
-        const avatarRing  = document.getElementById('avatar-ring');
-        const avatarInput = document.getElementById('avatar-input');
+        const avatarRing   = document.getElementById('avatar-ring');
+        const avatarInput  = document.getElementById('avatar-input');
         const avatarStatus = document.getElementById('avatar-status');
 
         avatarRing.addEventListener('click', () => avatarInput.click());
@@ -685,9 +698,7 @@
                 if (data.ok) {
                     avatarStatus.textContent = '// Uploaded ✓';
                     avatarStatus.style.color = 'var(--green)';
-                    // Update with the server's canonical URL (busts any cache)
-                    document.getElementById('avatar-initial').innerHTML =
-                        `<img src="${data.avatarUrl}?t=${Date.now()}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+                    setAvatarDisplay(data.avatarUrl + '?t=' + Date.now(), '');
                 } else {
                     avatarStatus.textContent = `// ${data.error || 'Upload failed.'}`;
                     avatarStatus.style.color = 'var(--red)';
@@ -699,6 +710,37 @@
 
             setTimeout(() => { avatarStatus.textContent = ''; }, 4000);
             avatarInput.value = ''; // allow re-selecting same file
+        });
+
+        // ── Remove avatar ─────────────────────────────────────────────────────
+        document.getElementById('remove-avatar-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('remove-avatar-btn');
+            btn.textContent = '// Removing…';
+            btn.disabled = true;
+
+            try {
+                const res  = await fetch('/api/profile/avatar', { method: 'DELETE' });
+                const data = await res.json();
+
+                if (data.ok) {
+                    // Revert to initial letter — use first name from the form
+                    const firstName = document.getElementById('firstName')?.value || '?';
+                    setAvatarDisplay('', firstName);
+                    avatarStatus.textContent = '// Photo removed.';
+                    avatarStatus.style.color = 'var(--muted)';
+                    setTimeout(() => { avatarStatus.textContent = ''; }, 3000);
+                } else {
+                    avatarStatus.textContent = `// ${data.error || 'Remove failed.'}`;
+                    avatarStatus.style.color = 'var(--red)';
+                    btn.disabled = false;
+                    btn.textContent = '// Remove photo';
+                }
+            } catch (err) {
+                avatarStatus.textContent = '// Network error.';
+                avatarStatus.style.color = 'var(--red)';
+                btn.disabled = false;
+                btn.textContent = '// Remove photo';
+            }
         });
 
         // ── Status panel ──────────────────────────────────────────────────────

@@ -119,4 +119,23 @@ router.post('/api/profile/avatar', isAuthenticated, (req, res, next) => {
   }
 });
 
+// ── DELETE /api/profile/avatar ────────────────────────────────────────────────
+router.delete('/api/profile/avatar', isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId, 'avatarUrl');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    if (user.avatarUrl) {
+      const filePath = path.join(__dirname, '../public', user.avatarUrl);
+      fs.unlink(filePath, () => {}); // remove file; ignore if already gone
+    }
+
+    await User.findByIdAndUpdate(req.session.userId, { avatarUrl: '' });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Avatar delete error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
