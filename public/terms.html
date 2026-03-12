@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms &amp; Conditions — Bruhn Freeman</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
         :root {
             --deep-space: #020818;
@@ -103,15 +103,32 @@
         }
 
         .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.4em;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue), var(--glow-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+        .logo-hex {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--glow-blue), var(--glow-purple));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 900; font-size: .88rem;
+            color: #fff;
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+            box-shadow: 0 0 26px rgba(26, 111, 255, .5);
+            flex-shrink: 0;
+        }
+        .logo-name {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 800; font-size: 1rem;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--text-primary); display: block;
+        }
+        .logo-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .58rem; letter-spacing: .18em;
+            color: var(--glow-cyan); text-transform: uppercase; display: block;
         }
 
         nav a {
@@ -317,7 +334,10 @@
 <div class="nebula"></div>
 
 <header>
-    <div class="logo">Bruhn Freeman</div>
+    <a href="/" class="logo">
+        <div class="logo-hex">BF</div>
+        <div><span class="logo-name">Bruhn Freeman</span><span class="logo-sub">// Custom Engineered Solutions</span></div>
+    </a>
     <nav>
         <a href="/index.html">Home</a>
         <a href="/?open=signup">Sign Up</a>
