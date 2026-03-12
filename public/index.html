@@ -2422,6 +2422,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
         }
 
         .user-avatar {
@@ -2442,6 +2445,62 @@
             color: var(--cyan);
             font-family: var(--fm);
             font-size: .8rem;
+        }
+
+        .user-caret {
+            color: var(--cyan);
+            font-size: .65rem;
+            transition: transform .2s;
+            line-height: 1;
+        }
+
+        .user-chip.open .user-caret {
+            transform: rotate(180deg);
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: #0a0f1a;
+            border: 1px solid var(--cyan);
+            border-radius: 4px;
+            min-width: 170px;
+            z-index: 9999;
+            padding: 4px 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,.6);
+        }
+
+        .user-chip.open .user-dropdown {
+            display: block;
+        }
+
+        .udrop-item {
+            display: block;
+            padding: 9px 16px;
+            color: var(--muted);
+            font-family: var(--fm);
+            font-size: .78rem;
+            text-decoration: none;
+            letter-spacing: .04em;
+            transition: color .15s, background .15s;
+        }
+
+        .udrop-item:hover {
+            color: var(--cyan);
+            background: rgba(0,255,255,.05);
+        }
+
+        .udrop-logout {
+            border-top: 1px solid rgba(255,255,255,.08);
+            margin-top: 4px;
+            color: #f87171;
+        }
+
+        .udrop-logout:hover {
+            color: #fca5a5;
+            background: rgba(248,113,113,.07);
         }
     </style>
 </head>
@@ -3255,20 +3314,33 @@
                 const cta = document.querySelector('.ncta'); // the Login/Signup nav button
 
                 if (data.loggedIn && cta) {
-                    // Replace the login button with a profile chip
+                    // Replace the login button with a profile chip + dropdown
                     cta.outerHTML = `
-        <div class="user-chip">
+        <div class="user-chip" id="user-menu-trigger">
           <div class="user-avatar">
             ${data.username.charAt(0).toUpperCase()}
           </div>
           <span class="user-name">${data.username}</span>
-          <a href="/test" class="btn-c" style="margin-left:12px;font-size:.75rem;padding:6px 14px">
-            Dashboard →
-          </a>
-          <a href="#" id="logout-btn" style="color:var(--muted);font-size:.75rem;margin-left:8px">
-            logout
-          </a>
+          <span class="user-caret">▾</span>
+          <div class="user-dropdown">
+            <a href="/profile" class="udrop-item">User Profile</a>
+            <a href="/test" class="udrop-item">PhoneTester</a>
+            <a href="/settings" class="udrop-item">Settings</a>
+            <a href="#" class="udrop-item udrop-logout" id="logout-btn">Logout</a>
+          </div>
         </div>`;
+
+                    const trigger = document.getElementById('user-menu-trigger');
+
+                    trigger.addEventListener('click', (e) => {
+                        // Don't toggle if clicking a link inside the dropdown
+                        if (e.target.closest('a')) return;
+                        trigger.classList.toggle('open');
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!trigger.contains(e.target)) trigger.classList.remove('open');
+                    });
 
                     document.getElementById('logout-btn').addEventListener('click', async (e) => {
                         e.preventDefault();
