@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bruhn Freeman — User Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --cyan:    #00d4ff;
+            --blue:    #3b82f6;
+            --mag:     #c040ff;
+            --bg:      #03050f;
+            --deep:    #060a1a;
+            --panel:   rgba(8,14,35,.95);
+            --border:  rgba(0,212,255,.18);
+            --border-hi: rgba(0,212,255,.4);
+            --white-s: #e8eaf6;
+            --muted:   rgba(180,190,220,.55);
+            --text3:   rgba(180,190,220,.38);
+            --green:   #4ade80;
+            --red:     #f87171;
+            --fm: 'Orbitron', monospace;
+            --fd: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--white-s);
+            font-family: var(--fd);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.13) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 85% 100%, rgba(192,64,255,.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── Top bar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(3,5,15,.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            padding: 0 32px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-logo {
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: .82rem;
+            letter-spacing: .15em;
+            color: var(--cyan);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .topbar-nav a {
+            font-family: var(--fm);
+            font-size: .6rem;
+            letter-spacing: .12em;
+            color: var(--muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color .2s;
+        }
+        .topbar-nav a:hover { color: var(--cyan); }
+        .topbar-nav .btn-logout {
+            color: var(--red);
+            border: 1px solid rgba(248,113,113,.3);
+            padding: 5px 12px;
+            font-size: .58rem;
+        }
+        .topbar-nav .btn-logout:hover { color: #fca5a5; border-color: rgba(248,113,113,.6); }
+
+        /* ── Page shell ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        /* ── Page header ── */
+        .ph {
+            margin-bottom: 40px;
+        }
+        .ph-label {
+            font-family: var(--fm);
+            font-size: .58rem;
+            letter-spacing: .22em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .ph-title {
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            line-height: 1.15;
+        }
+        .ph-bar {
+            width: 64px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            margin-top: 14px;
+        }
+
+        /* ── Section card ── */
+        .section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 32px 36px;
+            margin-bottom: 24px;
+        }
+
+        .section-hd {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(0,212,255,.1);
+        }
+
+        .section-title {
+            font-family: var(--fm);
+            font-size: .68rem;
+            letter-spacing: .18em;
+            color: var(--cyan);
+            text-transform: uppercase;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0,212,255,.2), transparent);
+        }
+
+        /* ── Avatar section layout ── */
+        .avatar-section {
+            display: flex;
+            gap: 36px;
+            align-items: flex-start;
+        }
+
+        .avatar-col { flex-shrink: 0; }
+
+        .avatar-ring {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px solid var(--border-hi);
+            background: rgba(0,212,255,.08);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color .2s;
+        }
+        .avatar-ring:hover { border-color: var(--cyan); }
+
+        .avatar-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .avatar-initial {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: 2.4rem;
+            color: var(--cyan);
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .2s;
+            border-radius: 50%;
+        }
+        .avatar-ring:hover .avatar-overlay { opacity: 1; }
+
+        .avatar-overlay-icon {
+            font-size: 1.4rem;
+        }
+
+        #avatar-input { display: none; }
+
+        .avatar-hint {
+            margin-top: 10px;
+            font-family: var(--fm);
+            font-size: .56rem;
+            letter-spacing: .08em;
+            color: var(--text3);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .avatar-status {
+            margin-top: 8px;
+            font-family: var(--fm);
+            font-size: .58rem;
+            letter-spacing: .08em;
+            min-height: 1em;
+            text-align: center;
+        }
+
+        .avatar-info { flex: 1; }
+        .avatar-info .meta-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 6px;
+            font-family: var(--fm);
+            font-size: .65rem;
+            letter-spacing: .06em;
+        }
+        .meta-key { color: var(--text3); min-width: 90px; }
+        .meta-val { color: var(--white-s); word-break: break-all; }
+        .meta-val.cyan { color: var(--cyan); }
+
+        /* ── Form grid ── */
+        .fgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 24px;
+        }
+        .fgrid.cols3 {
+            grid-template-columns: 2fr 1fr 1fr;
+        }
+        .fgrid.cols1 {
+            grid-template-columns: 1fr;
+        }
+        .fg { display: flex; flex-direction: column; gap: 7px; }
+        .fg.span2 { grid-column: span 2; }
+        .fg.span3 { grid-column: span 3; }
+
+        .fl {
+            font-family: var(--fm);
+            font-size: .58rem;
+            letter-spacing: .12em;
+            color: var(--cyan);
+            text-transform: uppercase;
+        }
+
+        .fi {
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(0,212,255,.18);
+            color: var(--white-s);
+            font-family: var(--fd);
+            font-size: .9rem;
+            padding: 10px 13px;
+            outline: none;
+            transition: border-color .2s;
+            width: 100%;
+        }
+        .fi::placeholder { color: rgba(180,190,220,.3); }
+        .fi:focus { border-color: var(--cyan); }
+        .fi:read-only { opacity: .5; cursor: not-allowed; }
+
+        textarea.fi {
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.6;
+        }
+
+        .char-count {
+            font-family: var(--fm);
+            font-size: .55rem;
+            letter-spacing: .06em;
+            color: var(--text3);
+            text-align: right;
+        }
+        .char-count.warn { color: var(--red); }
+
+        /* ── Website inputs ── */
+        .website-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px 24px;
+        }
+
+        /* ── Action bar ── */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-top: 8px;
+        }
+
+        .btn-save {
+            font-family: var(--fm);
+            font-weight: 700;
+            font-size: .72rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #000;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border: none;
+            padding: 13px 32px;
+            cursor: pointer;
+            transition: opacity .2s, transform .15s;
+        }
+        .btn-save:hover { opacity: .85; transform: translateY(-1px); }
+        .btn-save:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+        /* ── Save status ── */
+        .save-status {
+            font-family: var(--fm);
+            font-size: .65rem;
+            letter-spacing: .1em;
+            opacity: 0;
+            transition: opacity .3s;
+        }
+        .save-status.show { opacity: 1; }
+        .save-status.ok  { color: var(--green); }
+        .save-status.err { color: var(--red); }
+
+        /* ── Global status panel ── */
+        .status-panel {
+            display: none;
+            padding: 11px 16px;
+            font-family: var(--fm);
+            font-size: .68rem;
+            letter-spacing: .08em;
+            line-height: 1.65;
+            margin-bottom: 24px;
+        }
+        .status-panel.ok  { background: rgba(74,222,128,.08);  border: 1px solid rgba(74,222,128,.3);  color: var(--green); }
+        .status-panel.err { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.35); color: var(--red); }
+
+        /* ── Spinner ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(0,212,255,.25);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            vertical-align: middle;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .topbar { padding: 0 16px; }
+            .page { padding: 32px 16px 60px; }
+            .section { padding: 24px 20px; }
+            .fgrid, .fgrid.cols3, .website-row { grid-template-columns: 1fr; }
+            .fg.span2, .fg.span3 { grid-column: span 1; }
+            .avatar-section { flex-direction: column; align-items: center; text-align: center; }
+            .meta-key { min-width: 70px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <a href="/" class="topbar-logo">BF // PhoneTester</a>
+        <nav class="topbar-nav">
+            <a href="/test">PhoneTester</a>
+            <a href="/" class="btn-logout" id="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <div class="page">
+
+        <!-- Page header -->
+        <div class="ph">
+            <div class="ph-label">// Account Settings</div>
+            <h1 class="ph-title">User Profile</h1>
+            <div class="ph-bar"></div>
+        </div>
+
+        <!-- Status panel -->
+        <div class="status-panel" id="status-panel"></div>
+
+        <!-- ── Avatar & Identity ── -->
+        <div class="section">
+            <div class="section-hd">
+                <span class="section-title">// Identity</span>
+                <span class="section-line"></span>
+            </div>
+
+            <div class="avatar-section">
+                <div class="avatar-col">
+                    <div class="avatar-ring" id="avatar-ring" title="Click to upload photo">
+                        <div class="avatar-initial" id="avatar-initial"></div>
+                        <div class="avatar-overlay">
+                            <span class="avatar-overlay-icon">📷</span>
+                        </div>
+                    </div>
+                    <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp,image/gif" />
+                    <div class="avatar-hint">Click photo to change<br />JPEG · PNG · WebP · GIF<br />Max 5 MB</div>
+                    <div class="avatar-status" id="avatar-status"></div>
+                </div>
+
+                <div class="avatar-info" id="identity-meta">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Profile form ── -->
+        <form id="profile-form">
+
+            <!-- Personal Info -->
+            <div class="section">
+                <div class="section-hd">
+                    <span class="section-title">// Personal Info</span>
+                    <span class="section-line"></span>
+                </div>
+                <div class="fgrid">
+                    <div class="fg">
+                        <label class="fl" for="firstName">First Name</label>
+                        <input class="fi" type="text" id="firstName" name="firstName" placeholder="Jane" required />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="lastName">Last Name</label>
+                        <input class="fi" type="text" id="lastName" name="lastName" placeholder="Smith" required />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="email">Email</label>
+                        <input class="fi" type="email" id="email" name="email" readonly tabindex="-1" />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="phone">Phone</label>
+                        <input class="fi" type="tel" id="phone" name="phone" placeholder="123-456-7890" required />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="fieldOfStudy">Field of Study</label>
+                        <input class="fi" type="text" id="fieldOfStudy" name="fieldOfStudy"
+                            placeholder="e.g. Computer Science, Business, Design" />
+                    </div>
+                    <div class="fg span2">
+                        <label class="fl" for="bio">Bio</label>
+                        <textarea class="fi" id="bio" name="bio" maxlength="500"
+                            placeholder="A short bio about yourself…"></textarea>
+                        <div class="char-count" id="bio-count">0 / 500</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="section">
+                <div class="section-hd">
+                    <span class="section-title">// Address</span>
+                    <span class="section-line"></span>
+                </div>
+                <div class="fgrid cols1" style="gap:18px">
+                    <div class="fg">
+                        <label class="fl" for="street">Street Address</label>
+                        <input class="fi" type="text" id="street" name="street" placeholder="123 Main St, Apt 4B" />
+                    </div>
+                </div>
+                <div class="fgrid cols3" style="margin-top:18px">
+                    <div class="fg">
+                        <label class="fl" for="city">City</label>
+                        <input class="fi" type="text" id="city" name="city" placeholder="New York" />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="state">State</label>
+                        <input class="fi" type="text" id="state" name="state" placeholder="NY" maxlength="2" />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="zip">Zip Code</label>
+                        <input class="fi" type="text" id="zip" name="zip" placeholder="10001" maxlength="10" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="section">
+                <div class="section-hd">
+                    <span class="section-title">// Links &amp; Websites</span>
+                    <span class="section-line"></span>
+                </div>
+                <div class="website-row">
+                    <div class="fg">
+                        <label class="fl" for="w0">Website 1</label>
+                        <input class="fi" type="url" id="w0" name="w0" placeholder="https://yoursite.com" />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="w1">Website 2</label>
+                        <input class="fi" type="url" id="w1" name="w1" placeholder="https://linkedin.com/in/you" />
+                    </div>
+                    <div class="fg">
+                        <label class="fl" for="w2">Website 3</label>
+                        <input class="fi" type="url" id="w2" name="w2" placeholder="https://github.com/you" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save -->
+            <div class="action-bar">
+                <button type="submit" class="btn-save" id="save-btn">Save Profile →</button>
+                <span class="save-status" id="save-status"></span>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // ── Logout ────────────────────────────────────────────────────────────
+        document.getElementById('logout-link').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            location.href = '/';
+        });
+
+        // ── Load profile ──────────────────────────────────────────────────────
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/profile');
+                if (res.status === 401) { location.href = '/?open=login'; return; }
+                const d = await res.json();
+
+                // Populate text fields
+                setValue('firstName', d.firstName);
+                setValue('lastName', d.lastName);
+                setValue('email', d.email);
+                setValue('phone', d.phone);
+                setValue('bio', d.bio || '');
+                setValue('fieldOfStudy', d.fieldOfStudy || '');
+                setValue('street', d.address?.street || '');
+                setValue('city',   d.address?.city   || '');
+                setValue('state',  d.address?.state  || '');
+                setValue('zip',    d.address?.zip    || '');
+
+                const ws = d.websites || [];
+                setValue('w0', ws[0] || '');
+                setValue('w1', ws[1] || '');
+                setValue('w2', ws[2] || '');
+
+                updateBioCount();
+
+                // Avatar
+                const ring = document.getElementById('avatar-ring');
+                const initial = document.getElementById('avatar-initial');
+                if (d.avatarUrl) {
+                    initial.innerHTML = `<img src="${d.avatarUrl}" alt="${d.username}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+                } else {
+                    initial.textContent = (d.username || d.firstName || '?').charAt(0).toUpperCase();
+                }
+
+                // Identity meta panel
+                const joined = d.createdAt
+                    ? new Date(d.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                    : '—';
+                document.getElementById('identity-meta').innerHTML = `
+                    <div class="meta-row"><span class="meta-key">// Username</span><span class="meta-val cyan">${escHtml(d.username)}</span></div>
+                    <div class="meta-row"><span class="meta-key">// Email</span><span class="meta-val">${escHtml(d.email)}</span></div>
+                    <div class="meta-row"><span class="meta-key">// Member Since</span><span class="meta-val">${joined}</span></div>
+                `;
+            } catch (err) {
+                showStatus('err', '// Could not load profile. Please refresh.');
+            }
+        }
+
+        function setValue(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ── Bio character counter ─────────────────────────────────────────────
+        function updateBioCount() {
+            const bio = document.getElementById('bio');
+            const counter = document.getElementById('bio-count');
+            const len = (bio.value || '').length;
+            counter.textContent = `${len} / 500`;
+            counter.classList.toggle('warn', len > 450);
+        }
+        document.getElementById('bio').addEventListener('input', updateBioCount);
+
+        // ── Save profile ──────────────────────────────────────────────────────
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-btn');
+            const statusEl = document.getElementById('save-status');
+
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+            statusEl.className = 'save-status';
+            statusEl.textContent = '';
+
+            const body = new URLSearchParams();
+            ['firstName','lastName','phone','bio','fieldOfStudy','street','city','state','zip','w0','w1','w2'].forEach(id => {
+                body.append(id, document.getElementById(id)?.value || '');
+            });
+
+            try {
+                const res = await fetch('/api/profile', { method: 'POST', body });
+                const data = await res.json();
+
+                if (data.ok) {
+                    statusEl.textContent = '// Saved ✓';
+                    statusEl.className = 'save-status show ok';
+                    setTimeout(() => statusEl.classList.remove('show'), 3500);
+                } else {
+                    const msg = data.errors ? data.errors[0].msg : (data.error || 'Save failed.');
+                    statusEl.textContent = `// ${msg}`;
+                    statusEl.className = 'save-status show err';
+                }
+            } catch (err) {
+                statusEl.textContent = '// Network error. Please try again.';
+                statusEl.className = 'save-status show err';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Profile →';
+            }
+        });
+
+        // ── Avatar upload ─────────────────────────────────────────────────────
+        const avatarRing  = document.getElementById('avatar-ring');
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarStatus = document.getElementById('avatar-status');
+
+        avatarRing.addEventListener('click', () => avatarInput.click());
+
+        avatarInput.addEventListener('change', async () => {
+            const file = avatarInput.files[0];
+            if (!file) return;
+
+            // Immediate preview
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('avatar-initial').innerHTML =
+                    `<img src="${ev.target.result}" alt="preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+            };
+            reader.readAsDataURL(file);
+
+            // Upload
+            avatarStatus.innerHTML = '<span class="spinner"></span>';
+            avatarStatus.style.color = 'var(--cyan)';
+
+            const form = new FormData();
+            form.append('avatar', file);
+
+            try {
+                const res = await fetch('/api/profile/avatar', { method: 'POST', body: form });
+                const data = await res.json();
+
+                if (data.ok) {
+                    avatarStatus.textContent = '// Uploaded ✓';
+                    avatarStatus.style.color = 'var(--green)';
+                    // Update with the server's canonical URL (busts any cache)
+                    document.getElementById('avatar-initial').innerHTML =
+                        `<img src="${data.avatarUrl}?t=${Date.now()}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+                } else {
+                    avatarStatus.textContent = `// ${data.error || 'Upload failed.'}`;
+                    avatarStatus.style.color = 'var(--red)';
+                }
+            } catch (err) {
+                avatarStatus.textContent = '// Upload failed.';
+                avatarStatus.style.color = 'var(--red)';
+            }
+
+            setTimeout(() => { avatarStatus.textContent = ''; }, 4000);
+            avatarInput.value = ''; // allow re-selecting same file
+        });
+
+        // ── Status panel ──────────────────────────────────────────────────────
+        function showStatus(type, msg) {
+            const el = document.getElementById('status-panel');
+            el.textContent = msg;
+            el.className = `status-panel ${type}`;
+            el.style.display = 'block';
+        }
+
+        // ── Init ──────────────────────────────────────────────────────────────
+        loadProfile();
+    </script>
+
+</body>
+</html>

@@ -3346,12 +3346,15 @@
                 const cta = document.querySelector('.ncta'); // the Login/Signup nav button
 
                 if (data.loggedIn && cta) {
+                    // Avatar: photo if set, otherwise initial letter
+                    const avatarInner = data.avatarUrl
+                        ? `<img src="${data.avatarUrl}" alt="${data.username}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`
+                        : data.username.charAt(0).toUpperCase();
+
                     // Replace the login button with a profile chip + dropdown
                     cta.outerHTML = `
         <div class="user-chip" id="user-menu-trigger">
-          <div class="user-avatar">
-            ${data.username.charAt(0).toUpperCase()}
-          </div>
+          <div class="user-avatar">${avatarInner}</div>
           <span class="user-name">${data.username}</span>
           <span class="user-caret">▾</span>
           <div class="user-dropdown">

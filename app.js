@@ -5,6 +5,7 @@ const session = require('express-session');
 const path = require('path');
 const authRouter = require('./routes/auth');
 const testRouter = require('./routes/test');
+const userRouter = require('./routes/user');
 const { handleCall } = require('./voice');
 const isAuthenticated = require('./middleware/auth');
 require('dotenv').config();
@@ -26,10 +27,14 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/phonetester
 // Public routes (landing, signup, privacy, terms, verify-email from auth)
 app.use('/', authRouter);
 
-// Protected routes (test, start-test, status)
+// Protected routes (test, start-test, status, profile API)
 app.use('/', testRouter);
+app.use('/', userRouter);
 app.get('/test', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'test.html'));
+});
+app.get('/profile', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
 // Webhook (public for Twilio)
@@ -59,10 +64,10 @@ app.get('/reset-password', (req, res) => {
 app.get('/me', (req, res) => {
   if (!req.session.userId) return res.json({ loggedIn: false });
   const User = require('./models/user');
-  User.findById(req.session.userId, 'username firstName')
+  User.findById(req.session.userId, 'username firstName avatarUrl')
     .then(user => {
       if (!user) return res.json({ loggedIn: false });
-      res.json({ loggedIn: true, username: user.username, firstName: user.firstName });
+      res.json({ loggedIn: true, username: user.username, firstName: user.firstName, avatarUrl: user.avatarUrl || '' });
     })
     .catch(() => res.json({ loggedIn: false }));
 });

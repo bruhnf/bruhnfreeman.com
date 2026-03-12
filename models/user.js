@@ -26,6 +26,17 @@ const userSchema = new Schema({
   emailToken:        String,
   resetToken:        String,
   resetTokenExpiry:  Date,
+  // Profile fields
+  bio:               { type: String, default: '' },
+  fieldOfStudy:      { type: String, default: '' },
+  address: {
+    street: { type: String, default: '' },
+    city:   { type: String, default: '' },
+    state:  { type: String, default: '' },
+    zip:    { type: String, default: '' }
+  },
+  websites:          { type: [String], default: [] },
+  avatarUrl:         { type: String, default: '' },
   codeWords:  [String],
   attempts:   { type: Number, default: 0 },
   status:     { type: String, enum: ['pending', 'verified', 'success', 'failed'], default: 'pending' },
