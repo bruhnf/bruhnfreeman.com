@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const path = require('path');
 const User = require('../models/user');
-const { sendVerificationEmail } = require('../comms');
+const { sendVerificationEmail, sendPasswordResetEmail } = require('../comms');
 const { recordGeoLocation } = require('../middleware/geotrack');
 
 function normalizePhone(phone) {
@@ -148,6 +148,71 @@ router.post('/resend-verification', async (req, res) => {
   } catch (err) {
     console.error('Resend verification error:', err);
     res.json({ ok: false, message: 'Server error. Please try again.' });
+  }
+});
+
+// ── Forgot Password ──────────────────────────────────────────────────────────
+router.post('/forgot-password', async (req, res) => {
+  const { identifier } = req.body;
+  if (!identifier) {
+    return res.redirect('/forgot-password?error=missing-identifier');
+  }
+  try {
+    const user = await User.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+
+    // Always redirect OK — never reveal whether an account exists
+    if (!user) {
+      return res.redirect('/forgot-password?sent=1');
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+    await sendPasswordResetEmail(user.email, token);
+    console.log(`Password reset email sent to: ${user.email}`);
+    res.redirect('/forgot-password?sent=1');
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.redirect('/forgot-password?error=server-error');
+  }
+});
+
+// ── Reset Password ───────────────────────────────────────────────────────────
+router.post('/reset-password', [
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('confirm').custom((value, { req }) => {
+    if (value !== req.body.password) throw new Error('Passwords do not match');
+    return true;
+  })
+], async (req, res) => {
+  const { token, email, password } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.redirect(`/reset-password?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}&error=${encodeURIComponent(errors.array()[0].msg)}`);
+  }
+
+  try {
+    const user = await User.findOne({
+      email,
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.redirect(`/reset-password?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}&error=invalid-or-expired`);
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
+    await user.save();
+    console.log(`Password reset successful for: ${email}`);
+    res.redirect('/?open=login&notice=password-reset');
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.redirect(`/reset-password?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}&error=server-error`);
   }
 });
 

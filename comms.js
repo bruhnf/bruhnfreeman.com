@@ -29,6 +29,25 @@ async function sendVerificationEmail(email, token) {
   }
 }
 
+async function sendPasswordResetEmail(email, token) {
+  const link = `${process.env.APP_BASE_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+  try {
+    await transporter.sendMail({
+      to: email,
+      subject: 'Reset Your Bruhn Freeman Password',
+      html: `
+        <p>You requested a password reset for your Bruhn Freeman account.</p>
+        <p>Click <a href="${link}">here</a> to choose a new password. This link expires in <strong>1 hour</strong>.</p>
+        <p>If you did not request this, you can safely ignore this email.</p>
+      `
+    });
+    console.log(`Password reset email sent to: ${email}`);
+  } catch (err) {
+    console.error('Password reset email error:', err);
+    throw err;
+  }
+}
+
 async function sendCodeEmail(email, codes) {
   try {
     await transporter.sendMail({
@@ -57,4 +76,4 @@ async function sendSMS(phone, message) {
   }
 }
 
-module.exports = { sendVerificationEmail, sendCodeEmail, sendSMS };
+module.exports = { sendVerificationEmail, sendPasswordResetEmail, sendCodeEmail, sendSMS };

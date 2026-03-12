@@ -48,6 +48,14 @@ app.get("/sms-compliance", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'sms-compliance.html'));
 });
 
+app.get('/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'forgot-password.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'reset-password.html'));
+});
+
 app.get('/me', (req, res) => {
   if (!req.session.userId) return res.json({ loggedIn: false });
   const User = require('./models/user');
