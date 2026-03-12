@@ -99,7 +99,9 @@ router.post('/login', [
     console.log('Login validation errors:', errors.array());
     return res.redirect(`/?open=login&error=${encodeURIComponent(errors.array().map(e => e.msg).join(', '))}`);
   }
-  const { identifier, password } = req.body;
+  const { identifier, password, rememberMe } = req.body;
+  const isProd = process.env.NODE_ENV === 'production';
+
   try {
     const user = await User.findOne({ $or: [{ email: identifier }, { username: identifier }] });
     if (!user) {
@@ -115,9 +117,46 @@ router.post('/login', [
       console.log(`Unverified login attempt: ${identifier}`);
       return res.redirect('/?open=login&error=not-verified');
     }
+
     req.session.userId = user._id.toString();
     recordGeoLocation(req, user._id, 'login');
     console.log(`User logged in: ${identifier}`);
+
+    // ── Username hint cookie (not httpOnly — JS reads it to pre-fill the form)
+    res.cookie('bf_user', user.username, {
+      httpOnly: false,
+      secure:   isProd,
+      sameSite: 'lax',
+      maxAge:   30 * 24 * 60 * 60 * 1000  // 30 days
+    });
+
+    // ── Remember-me (long-lived split token) ─────────────────────────────────
+    if (rememberMe === 'yes') {
+      const selector  = crypto.randomBytes(16).toString('hex');
+      const validator = crypto.randomBytes(32).toString('hex');
+      const validatorHash = crypto.createHash('sha256').update(validator).digest('hex');
+
+      // Drop expired tokens, then cap at 10 active devices
+      user.rememberTokens = user.rememberTokens
+        .filter(t => t.expires > new Date())
+        .slice(-9);  // keep at most 9, we're adding 1
+
+      user.rememberTokens.push({
+        selector,
+        validatorHash,
+        expires:   new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        userAgent: req.headers['user-agent'] || ''
+      });
+      await user.save();
+
+      res.cookie('bf_remember', `${selector}:${validator}`, {
+        httpOnly: true,
+        secure:   isProd,
+        sameSite: 'lax',
+        maxAge:   30 * 24 * 60 * 60 * 1000  // 30 days
+      });
+    }
+
     res.redirect('/?login=success');
   } catch (err) {
     console.error('Login error:', err);

@@ -1,26 +1,48 @@
-const express = require('express');
-const mongoose = require('mongoose');
+const express    = require('express');
+const mongoose   = require('mongoose');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const path = require('path');
+const session    = require('express-session');
+const { MongoStore } = require('connect-mongo');
+const path       = require('path');
+const crypto     = require('crypto');
 const authRouter = require('./routes/auth');
 const testRouter = require('./routes/test');
 const userRouter = require('./routes/user');
+const rememberMe = require('./middleware/rememberMe');
 const { handleCall } = require('./voice');
 const isAuthenticated = require('./middleware/auth');
 require('dotenv').config();
 
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/phonetester';
+const isProd    = process.env.NODE_ENV === 'production';
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'fallback_secret',
-  resave: false,
-  saveUninitialized: false
+  secret:            process.env.SESSION_SECRET || 'fallback_secret',
+  resave:            false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl:   MONGO_URI,
+    ttl:        24 * 60 * 60,   // session TTL: 24 hours (seconds)
+    autoRemove: 'native'
+  }),
+  cookie: {
+    httpOnly: true,
+    secure:   isProd,
+    sameSite: 'lax',
+    maxAge:   24 * 60 * 60 * 1000  // 24 hours (ms)
+  }
 }));
+
+// Restore session from long-lived remember-me cookie if no active session
+app.use(rememberMe);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/phonetester')
+mongoose.connect(MONGO_URI)
   .then(() => console.log('DB connected'))
   .catch(err => console.error('DB connection error:', err));
 
@@ -47,8 +69,8 @@ app.get('/privacy', (req, res) => {
 
 app.get('/terms', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+});
 
-}); 
 app.get("/sms-compliance", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'sms-compliance.html'));
 });
@@ -72,8 +94,35 @@ app.get('/me', (req, res) => {
     .catch(() => res.json({ loggedIn: false }));
 });
 
-app.post('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/'));
+app.post('/logout', async (req, res) => {
+  // Remove the specific remember-me token from the DB
+  try {
+    const rememberCookie = (() => {
+      const header = req.headers.cookie || '';
+      for (const part of header.split(';')) {
+        const eq = part.indexOf('=');
+        if (eq === -1) continue;
+        if (part.slice(0, eq).trim() === 'bf_remember')
+          return decodeURIComponent(part.slice(eq + 1).trim());
+      }
+      return null;
+    })();
+
+    if (rememberCookie && req.session.userId) {
+      const selector = rememberCookie.split(':')[0];
+      if (selector) {
+        const User = require('./models/user');
+        await User.findByIdAndUpdate(req.session.userId, {
+          $pull: { rememberTokens: { selector } }
+        });
+      }
+    }
+  } catch (e) { /* ignore — session destroy proceeds regardless */ }
+
+  req.session.destroy(() => {
+    res.clearCookie('bf_remember', { path: '/' });
+    res.redirect('/');
+  });
 });
 
 const PORT = process.env.PORT || 3000;

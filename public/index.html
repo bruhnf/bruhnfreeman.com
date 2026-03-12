@@ -2592,7 +2592,14 @@
                     <label class="fl">// Password</label>
                     <input class="fi" type="password" name="password" placeholder="••••••••" required />
                 </div>
-                <div style="text-align:right;margin-top:2px;margin-bottom:6px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                        <input type="checkbox" name="rememberMe" id="rememberMe" value="yes"
+                            style="accent-color:var(--cyan);width:14px;height:14px;cursor:pointer;" />
+                        <span style="font-family:var(--fm);font-size:.62rem;color:var(--muted);letter-spacing:.06em;">
+                            Remember me
+                        </span>
+                    </label>
                     <a href="/forgot-password"
                         style="font-family:var(--fm);font-size:.63rem;color:var(--muted);letter-spacing:.06em;text-decoration:none;opacity:.7;transition:opacity .2s"
                         onmouseover="this.style.opacity=1;this.style.color='var(--cyan)'"
@@ -3226,9 +3233,33 @@
 
         // ── Modal ───────────────────────────────────────────────────────
         const modal = document.getElementById('modal'), mclose = document.getElementById('mc'), mtabs = document.querySelectorAll('.mta'), mforms = document.querySelectorAll('.mf');
-        function openM(tab) { modal.classList.add('open'); document.body.style.overflow = 'hidden'; if (tab) swTab(tab); }
+
+        // Read a browser cookie by name (used to pre-fill remembered username)
+        function readCookie(name) {
+            const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+            return match ? decodeURIComponent(match.slice(name.length + 1)) : '';
+        }
+
+        // Pre-fill the login identifier field with the remembered username if present
+        function preFillLogin() {
+            const remembered = readCookie('bf_user');
+            if (!remembered) return;
+            const field = document.querySelector('#mf-li [name="identifier"]');
+            if (field && !field.value) field.value = remembered;
+        }
+
+        function openM(tab) {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            if (tab) swTab(tab);
+            if (tab === 'li') preFillLogin();
+        }
         function closeM() { modal.classList.remove('open'); document.body.style.overflow = ''; }
-        function swTab(n) { mtabs.forEach(t => t.classList.toggle('on', t.dataset.t === n)); mforms.forEach(f => f.classList.toggle('on', f.id === 'mf-' + n)); }
+        function swTab(n) {
+            mtabs.forEach(t => t.classList.toggle('on', t.dataset.t === n));
+            mforms.forEach(f => f.classList.toggle('on', f.id === 'mf-' + n));
+            if (n === 'li') preFillLogin();
+        }
         document.getElementById('navBtn').addEventListener('click', e => { e.preventDefault(); openM('li') });
         document.getElementById('heroBtn').addEventListener('click', e => { e.preventDefault(); openM('su') });
         document.getElementById('ptBtn').addEventListener('click', e => { e.preventDefault(); openM('su') });

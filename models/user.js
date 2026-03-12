@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const rememberTokenSchema = new Schema({
+  selector:      { type: String, required: true },
+  validatorHash: { type: String, required: true }, // SHA-256 of the raw validator
+  expires:       { type: Date,   required: true },
+  userAgent:     { type: String, default: '' }
+}, { _id: false });
+
 const geoEntrySchema = new Schema({
   ip:                 { type: String },
   country:            { type: String },
@@ -37,6 +44,7 @@ const userSchema = new Schema({
   },
   websites:          { type: [String], default: [] },
   avatarUrl:         { type: String, default: '' },
+  rememberTokens:    { type: [rememberTokenSchema], default: [] },
   codeWords:  [String],
   attempts:   { type: Number, default: 0 },
   status:     { type: String, enum: ['pending', 'verified', 'success', 'failed'], default: 'pending' },
