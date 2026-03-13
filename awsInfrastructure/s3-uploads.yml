@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  S3 bucket and IAM credentials for bruhnfreeman.com user-uploaded content (avatars, etc.).
+  Deployed standalone — no dependency on a main infrastructure stack.
+  After deploying, copy the AccessKeyId and SecretAccessKey outputs into
+  your Lightsail container environment variables.
+
+# ─── PARAMETERS ──────────────────────────────────────────────────────────────
+
+Parameters:
+
+  BucketName:
+    Type: String
+    Default: bruhnfreeman-uploads
+    Description: >
+      Globally unique S3 bucket name. Must be lowercase, no spaces.
+      If the default is already taken, append your account ID or a short suffix
+      (e.g. bruhnfreeman-uploads-prod).
+
+# ─── RESOURCES ───────────────────────────────────────────────────────────────
+
+Resources:
+
+  # ── S3 Bucket ───────────────────────────────────────────────────────────────
+
+  UploadsBucket:
+    Type: AWS::S3::Bucket
+    # Retain the bucket even if this stack is deleted — protects user data.
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Ref BucketName
+
+      # Block public ACLs (best practice) but allow the bucket policy below
+      # to grant public GET on the avatars/ prefix.
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls:       true
+        IgnorePublicAcls:      true
+        BlockPublicPolicy:     false
+        RestrictPublicBuckets: false
+
+      # CORS: browsers load avatar <img> tags from S3 directly.
+      CorsConfiguration:
+        CorsRules:
+          - Id: AvatarReadCORS
+            AllowedOrigins:
+              - 'https://www.bruhnfreeman.com'
+              - 'https://bruhnfreeman.com'
+            AllowedMethods:
+              - GET
+            AllowedHeaders:
+              - '*'
+            ExposedHeaders:
+              - ETag
+            MaxAge: 3600
+
+      # Lifecycle: delete any orphaned multipart uploads after 7 days.
+      LifecycleConfiguration:
+        Rules:
+          - Id: AbortIncompleteMultipartUploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+
+      Tags:
+        - Key: Project
+          Value: bruhnfreeman
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # ── Bucket Policy ────────────────────────────────────────────────────────────
+  # Grants public read on the avatars/ prefix only.
+  # The IAM user below handles write/delete from the Lightsail container.
+
+  UploadsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref UploadsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+
+          # Public read for avatar images so they render in <img> tags.
+          - Sid: PublicReadAvatars
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${UploadsBucket.Arn}/avatars/*'
+
+          # Deny any non-HTTPS requests to the entire bucket.
+          - Sid: DenyNonHTTPS
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !GetAtt UploadsBucket.Arn
+              - !Sub '${UploadsBucket.Arn}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # ── IAM User ─────────────────────────────────────────────────────────────────
+  # Lightsail containers cannot assume IAM roles, so the app authenticates
+  # with a dedicated IAM user scoped to this bucket only.
+
+  AppUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: bruhnfreeman-app
+      Policies:
+        - PolicyName: S3AvatarUploads
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub '${UploadsBucket.Arn}/avatars/*'
+
+  AppUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref AppUser
+
+# ─── OUTPUTS ─────────────────────────────────────────────────────────────────
+
+Outputs:
+
+  BucketName:
+    Description: S3 bucket name — set as AWS_S3_BUCKET in Lightsail env vars
+    Value: !Ref UploadsBucket
+
+  BucketRegionalDomain:
+    Description: >
+      Regional domain name for the bucket. Avatar URLs will be:
+      https://<BucketRegionalDomain>/avatars/<userId>.<ext>
+    Value: !GetAtt UploadsBucket.RegionalDomainName
+
+  AccessKeyId:
+    Description: AWS Access Key ID — set as AWS_ACCESS_KEY_ID in Lightsail env vars
+    Value: !Ref AppUserAccessKey
+
+  SecretAccessKey:
+    Description: AWS Secret Access Key — set as AWS_SECRET_ACCESS_KEY in Lightsail env vars
+    Value: !GetAtt AppUserAccessKey.SecretAccessKey
