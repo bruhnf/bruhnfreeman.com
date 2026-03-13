@@ -112,6 +112,9 @@ out
 .yarn/install-state.gz
 .pnp.*
 
+# User-uploaded files (filesystem-only, not committed to git)
+public/uploads/
+
 # Bruhnssssss Stuffffff
 prompt.txt
 .claude

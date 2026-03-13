@@ -679,7 +679,9 @@
             const initial   = document.getElementById('avatar-initial');
             const removeBtn = document.getElementById('remove-avatar-btn');
             if (avatarUrl) {
-                initial.innerHTML = `<img src="${avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+                const fallbackChar = String(fallbackName).charAt(0).toUpperCase();
+                initial.innerHTML = `<img src="${avatarUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                    onerror="this.parentElement.textContent='${fallbackChar}';document.getElementById('remove-avatar-btn').style.display='none';" />`;
                 removeBtn.style.display = 'block';
             } else {
                 initial.textContent = String(fallbackName).charAt(0).toUpperCase();
