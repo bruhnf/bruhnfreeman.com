@@ -2,25 +2,18 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/user');
 const isAuthenticated = require('../middleware/auth');
 
-// ── Avatar upload storage ─────────────────────────────────────────────────────
-const avatarDir = path.join(__dirname, '../public/uploads/avatars');
-fs.mkdirSync(avatarDir, { recursive: true });
+// ── S3 client ─────────────────────────────────────────────────────────────────
+const s3 = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
+const S3_BUCKET = process.env.AWS_S3_BUCKET;
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, avatarDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    cb(null, `${req.session.userId}${ext}`);
-  }
-});
-
+// ── Avatar upload — buffer in memory, then stream to S3 ──────────────────────
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
   fileFilter: (req, file, cb) => {
     if (/^image\/(jpeg|jpg|png|webp|gif)$/.test(file.mimetype)) {
@@ -101,16 +94,29 @@ router.post('/api/profile/avatar', isAuthenticated, (req, res, next) => {
 }, async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
-  const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
-  const avatarUrl = `/uploads/avatars/${req.session.userId}${ext}`;
+  const ext    = path.extname(req.file.originalname).toLowerCase() || '.jpg';
+  const s3Key  = `avatars/${req.session.userId}${ext}`;
+  const region = process.env.AWS_REGION || 'us-east-1';
+  const avatarUrl = `https://${S3_BUCKET}.s3.${region}.amazonaws.com/${s3Key}`;
 
-  // If the user had a previous avatar with a different extension, remove it
   try {
+    // If the extension changed, delete the old S3 object
     const user = await User.findById(req.session.userId, 'avatarUrl');
     if (user && user.avatarUrl && user.avatarUrl !== avatarUrl) {
-      const oldPath = path.join(__dirname, '../public', user.avatarUrl);
-      fs.unlink(oldPath, () => {}); // ignore errors if file doesn't exist
+      const oldKey = user.avatarUrl.split('.amazonaws.com/')[1];
+      if (oldKey) {
+        await s3.send(new DeleteObjectCommand({ Bucket: S3_BUCKET, Key: oldKey })).catch(() => {});
+      }
     }
+
+    // Upload buffer directly to S3
+    await s3.send(new PutObjectCommand({
+      Bucket:      S3_BUCKET,
+      Key:         s3Key,
+      Body:        req.file.buffer,
+      ContentType: req.file.mimetype,
+    }));
+
     await User.findByIdAndUpdate(req.session.userId, { avatarUrl });
     res.json({ ok: true, avatarUrl });
   } catch (err) {
@@ -126,8 +132,10 @@ router.delete('/api/profile/avatar', isAuthenticated, async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (user.avatarUrl) {
-      const filePath = path.join(__dirname, '../public', user.avatarUrl);
-      fs.unlink(filePath, () => {}); // remove file; ignore if already gone
+      const oldKey = user.avatarUrl.split('.amazonaws.com/')[1];
+      if (oldKey) {
+        await s3.send(new DeleteObjectCommand({ Bucket: S3_BUCKET, Key: oldKey })).catch(() => {});
+      }
     }
 
     await User.findByIdAndUpdate(req.session.userId, { avatarUrl: '' });
