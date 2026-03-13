@@ -3386,7 +3386,7 @@
                     cta.outerHTML = `
         <div class="user-chip" id="user-menu-trigger">
           <div class="user-avatar">${avatarInner}</div>
-          <span class="user-name">${data.username}</span>
+          <span class="user-name">${data.firstName || data.username}</span>
           <span class="user-caret">▾</span>
           <div class="user-dropdown">
             <a href="/profile" class="udrop-item">User Profile</a>
