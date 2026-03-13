@@ -58,6 +58,9 @@ app.get('/test', isAuthenticated, (req, res) => {
 app.get('/profile', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
+app.get('/settings', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'settings.html'));
+});
 
 // Webhook (public for Twilio)
 app.post('/twilio-voice', handleCall);
