@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bruhn Freeman — User Profile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&family=Exo+2:wght@800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
     <style>
         :root {
             --cyan:    #00d4ff;
@@ -63,13 +63,32 @@
         }
 
         .topbar-logo {
-            font-family: var(--fm);
-            font-weight: 900;
-            font-size: .82rem;
-            letter-spacing: .15em;
-            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 12px;
             text-decoration: none;
-            text-transform: uppercase;
+        }
+        .logo-hex {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--blue), var(--mag));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900; font-size: .78rem;
+            color: #fff;
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+            box-shadow: 0 0 22px rgba(59, 130, 246, .5);
+            flex-shrink: 0;
+        }
+        .logo-name {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 800; font-size: .9rem;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--white-s); display: block;
+        }
+        .logo-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .52rem; letter-spacing: .18em;
+            color: var(--cyan); text-transform: uppercase; display: block;
         }
 
         .topbar-nav {
@@ -394,7 +413,10 @@
 
     <!-- Top bar -->
     <header class="topbar">
-        <a href="/" class="topbar-logo">BF // PhoneTester</a>
+        <a href="/" class="topbar-logo">
+            <div class="logo-hex">BF</div>
+            <div><span class="logo-name">Bruhn Freeman</span><span class="logo-sub">// Custom Engineered Solutions</span></div>
+        </a>
         <nav class="topbar-nav">
             <a href="/test">PhoneTester</a>
             <a href="/" class="btn-logout" id="logout-link">Logout</a>
