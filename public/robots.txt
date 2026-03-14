@@ -9,3 +9,4 @@ Disallow: /verify-email
 Disallow: /resend-verification
 Disallow: /logout
 Allow: /
+Sitemap: https://www.bruhnfreeman.com/sitemap.xml
