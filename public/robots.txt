@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /login
+Disallow: /signup
+Disallow: /verify-email
+Disallow: /start-test
+Disallow: /me
+Disallow: /api/
+Disallow: /verify-email
+Disallow: /resend-verification
+Disallow: /logout
+Allow: /
