@@ -57,7 +57,11 @@ router.post('/signup', [
       phone,
       password: hashedPassword,
       emailToken: token,
-      optInSMS: optin === 'yes'
+      optInSMS: optin === 'yes',
+      // A2P 10DLC compliance: Log consent metadata
+      optInTimestamp: optin === 'yes' ? new Date() : null,
+      optInIp: optin === 'yes' ? (req.headers['x-forwarded-for'] || req.ip || '') : '',
+      optInSource: optin === 'yes' ? 'web_signup_form' : ''
     });
     await user.save();
     await sendVerificationEmail(email, token);

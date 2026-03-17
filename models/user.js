@@ -48,8 +48,11 @@ const userSchema = new Schema({
   codeWords:  [String],
   attempts:   { type: Number, default: 0 },
   status:     { type: String, enum: ['pending', 'verified', 'success', 'failed'], default: 'pending' },
-  optInSMS:   { type: Boolean, default: false },
-  createdAt:  { type: Date, default: Date.now },
+  optInSMS:          { type: Boolean, default: false },
+  optInTimestamp:    { type: Date, default: null },
+  optInIp:           { type: String, default: '' },
+  optInSource:       { type: String, default: '' },
+  createdAt:         { type: Date, default: Date.now },
   lastTestAt: { type: Date, default: null },
   geoHistory: { type: [geoEntrySchema], default: [] }
 });

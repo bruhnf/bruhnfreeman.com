@@ -64,8 +64,10 @@ async function sendCodeEmail(email, codes) {
 
 async function sendSMS(phone, message) {
   try {
+    // A2P 10DLC compliance: Append opt-out instructions to all SMS messages
+    const messageWithOptOut = `${message}\n\nReply STOP to opt out. HELP for help. Msg&data rates may apply.`;
     await client.messages.create({
-      body: message,
+      body: messageWithOptOut,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: phone
     });
