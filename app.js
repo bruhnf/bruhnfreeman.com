@@ -8,9 +8,11 @@ const crypto     = require('crypto');
 const authRouter = require('./routes/auth');
 const testRouter = require('./routes/test');
 const userRouter = require('./routes/user');
+const subscriptionRouter = require('./routes/subscription');
 const rememberMe = require('./middleware/rememberMe');
 const { handleCall } = require('./voice');
 const isAuthenticated = require('./middleware/auth');
+const isPremium = require('./middleware/premium');
 require('dotenv').config();
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/phonetester';
@@ -49,11 +51,21 @@ mongoose.connect(MONGO_URI)
 // Public routes (landing, signup, privacy, terms, verify-email from auth)
 app.use('/', authRouter);
 
+// Subscription routes (API endpoints)
+app.use('/', subscriptionRouter);
+
 // Protected routes (test, start-test, status, profile API)
 app.use('/', testRouter);
 app.use('/', userRouter);
-app.get('/test', isAuthenticated, (req, res) => {
+
+// Premium-protected routes (require both authentication AND premium subscription)
+app.get('/test', isAuthenticated, isPremium, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'test.html'));
+});
+
+// Member-only routes (require authentication only)
+app.get('/subscribe', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'subscribe.html'));
 });
 app.get('/profile', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'profile.html'));
@@ -89,10 +101,17 @@ app.get('/reset-password', (req, res) => {
 app.get('/me', (req, res) => {
   if (!req.session.userId) return res.json({ loggedIn: false });
   const User = require('./models/user');
-  User.findById(req.session.userId, 'username firstName avatarUrl')
+  User.findById(req.session.userId, 'username firstName avatarUrl isPremium premiumSince')
     .then(user => {
       if (!user) return res.json({ loggedIn: false });
-      res.json({ loggedIn: true, username: user.username, firstName: user.firstName, avatarUrl: user.avatarUrl || '' });
+      res.json({ 
+        loggedIn: true, 
+        username: user.username, 
+        firstName: user.firstName, 
+        avatarUrl: user.avatarUrl || '',
+        isPremium: user.isPremium || false,
+        premiumSince: user.premiumSince || null
+      });
     })
     .catch(() => res.json({ loggedIn: false }));
 });

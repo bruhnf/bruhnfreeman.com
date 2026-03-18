@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bruhn Freeman — Premium Subscription</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&family=Exo+2:wght@800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --cyan:    #00d4ff;
+            --blue:    #3b82f6;
+            --mag:     #c040ff;
+            --gold:    #fbbf24;
+            --bg:      #03050f;
+            --deep:    #060a1a;
+            --panel:   rgba(8,14,35,.95);
+            --border:  rgba(0,212,255,.18);
+            --border-hi: rgba(0,212,255,.4);
+            --white-s: #e8eaf6;
+            --muted:   rgba(180,190,220,.55);
+            --text3:   rgba(180,190,220,.38);
+            --green:   #4ade80;
+            --red:     #f87171;
+            --fm: 'Orbitron', monospace;
+            --fd: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--white-s);
+            font-family: var(--fd);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(251,191,36,.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 85% 100%, rgba(192,64,255,.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── Top bar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(3,5,15,.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            padding: 0 32px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-hex {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--blue), var(--mag));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900; font-size: .78rem;
+            color: #fff;
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+            box-shadow: 0 0 22px rgba(59, 130, 246, .5);
+            flex-shrink: 0;
+        }
+        .logo-name {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 800; font-size: .9rem;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--white-s); display: block;
+        }
+        .logo-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .52rem; letter-spacing: .18em;
+            color: var(--cyan); text-transform: uppercase; display: block;
+        }
+
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .topbar-nav a {
+            font-family: var(--fm);
+            font-size: .6rem;
+            letter-spacing: .12em;
+            color: var(--muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color .2s;
+        }
+        .topbar-nav a:hover { color: var(--cyan); }
+        .topbar-nav .btn-logout {
+            color: var(--red);
+            border: 1px solid rgba(248,113,113,.3);
+            padding: 5px 12px;
+            font-size: .58rem;
+        }
+        .topbar-nav .btn-logout:hover { color: #fca5a5; border-color: rgba(248,113,113,.6); }
+
+        /* ── Page shell ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        /* ── Page header ── */
+        .ph { margin-bottom: 40px; text-align: center; }
+        .ph-label {
+            font-family: var(--fm);
+            font-size: .58rem;
+            letter-spacing: .22em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .ph-title {
+            font-family: var(--fm);
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .ph-sub {
+            font-family: var(--fd);
+            font-size: 1rem;
+            color: var(--muted);
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+        .ph-bar {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), transparent);
+            margin: 24px auto 0;
+        }
+
+        /* ── Alert banner ── */
+        .alert {
+            background: rgba(251,191,36,.08);
+            border: 1px solid rgba(251,191,36,.3);
+            color: var(--gold);
+            font-family: var(--fm);
+            font-size: .72rem;
+            letter-spacing: .08em;
+            padding: 14px 20px;
+            margin-bottom: 32px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .alert.error {
+            background: rgba(248,113,113,.08);
+            border-color: rgba(248,113,113,.3);
+            color: var(--red);
+        }
+        .alert.success {
+            background: rgba(74,222,128,.08);
+            border-color: rgba(74,222,128,.3);
+            color: var(--green);
+        }
+
+        /* ── Premium status card ── */
+        .status-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            display: none;
+        }
+        .status-card.show { display: block; }
+        .status-card.premium {
+            border-color: rgba(251,191,36,.4);
+            background: linear-gradient(135deg, rgba(251,191,36,.05) 0%, rgba(192,64,255,.03) 100%);
+        }
+
+        .status-hd {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .status-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold), var(--mag));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+        }
+        .status-title {
+            font-family: var(--fm);
+            font-size: .85rem;
+            letter-spacing: .12em;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+        .status-sub {
+            font-size: .85rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── Features grid ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 28px 26px;
+            transition: border-color .3s, transform .3s;
+        }
+        .feature-card:hover {
+            border-color: var(--border-hi);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        .feature-title {
+            font-family: var(--fm);
+            font-size: .72rem;
+            letter-spacing: .12em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .feature-desc {
+            font-size: .9rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .feature-tag {
+            display: inline-block;
+            margin-top: 14px;
+            font-family: var(--fm);
+            font-size: .55rem;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            background: rgba(74,222,128,.1);
+            border: 1px solid rgba(74,222,128,.3);
+            color: var(--green);
+        }
+        .feature-tag.coming {
+            background: rgba(251,191,36,.1);
+            border-color: rgba(251,191,36,.3);
+            color: var(--gold);
+        }
+
+        /* ── Subscribe section ── */
+        .subscribe-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .subscribe-title {
+            font-family: var(--fm);
+            font-size: .85rem;
+            letter-spacing: .15em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .subscribe-price {
+            font-family: var(--fm);
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--white-s);
+            margin-bottom: 8px;
+        }
+        .subscribe-price span {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .subscribe-note {
+            font-size: .85rem;
+            color: var(--muted);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .btn-subscribe {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: linear-gradient(90deg, var(--gold), var(--mag));
+            border: none;
+            font-family: var(--fm);
+            font-size: .75rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .btn-subscribe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(251,191,36,.3);
+        }
+        .btn-subscribe:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid var(--border);
+            font-family: var(--fm);
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color .2s, background .2s;
+            margin-top: 16px;
+        }
+        .btn-secondary:hover {
+            border-color: var(--cyan);
+            background: rgba(0,212,255,.05);
+        }
+
+        /* ── Footer note ── */
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-size: .8rem;
+            color: var(--text3);
+            line-height: 1.7;
+        }
+        .footer-note a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+        .footer-note a:hover { text-decoration: underline; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9000;
+            background: var(--panel);
+            border: 1px solid rgba(74,222,128,.4);
+            border-left: 3px solid var(--green);
+            padding: 16px 24px;
+            font-family: var(--fm);
+            font-size: .76rem;
+            color: var(--green);
+            max-width: 360px;
+            transform: translateX(120%);
+            transition: transform .4s;
+            box-shadow: 0 8px 40px rgba(0,0,0,.4);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.error {
+            border-color: rgba(248,113,113,.4);
+            border-left-color: var(--red);
+            color: var(--red);
+        }
+
+        @media (max-width: 640px) {
+            .topbar { padding: 0 16px; }
+            .page { padding: 32px 16px 60px; }
+            .ph-title { font-size: 1.5rem; }
+            .subscribe-section { padding: 28px 20px; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <a href="/" class="topbar-logo">
+            <div class="logo-hex">BF</div>
+            <div>
+                <span class="logo-name">Bruhn Freeman</span>
+                <span class="logo-sub">// Premium Access</span>
+            </div>
+        </a>
+        <nav class="topbar-nav">
+            <a href="/">Home</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="#" class="btn-logout" id="logout-btn">Logout</a>
+        </nav>
+    </div>
+
+    <div class="page">
+        <!-- Page Header -->
+        <div class="ph">
+            <div class="ph-label">// Unlock Everything</div>
+            <h1 class="ph-title">Premium Subscription</h1>
+            <p class="ph-sub">Get unlimited access to all Bruhn Freeman tools and services with a single subscription.</p>
+            <div class="ph-bar"></div>
+        </div>
+
+        <!-- Alert Banner (shown based on URL params) -->
+        <div class="alert" id="alert-banner" style="display:none;"></div>
+
+        <!-- Current Status (shown if premium) -->
+        <div class="status-card premium" id="premium-status">
+            <div class="status-hd">
+                <div class="status-icon">⭐</div>
+                <div>
+                    <div class="status-title">Premium Member</div>
+                    <div class="status-sub" id="premium-since">Active since —</div>
+                </div>
+            </div>
+            <p style="color: var(--muted); line-height: 1.6;">
+                You have full access to all premium features. Thank you for your subscription!
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎙️</div>
+                <div class="feature-title">Phone Tester</div>
+                <div class="feature-desc">
+                    Test your voice quality and microphone clarity. Know exactly how you sound to others on calls.
+                </div>
+                <div class="feature-tag">Available Now</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">AI Drawing Simulator</div>
+                <div class="feature-desc">
+                    Create stunning AI-generated artwork with our interactive drawing and generation tools.
+                </div>
+                <div class="feature-tag coming">Coming Soon</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">AI Prompt Collaboration</div>
+                <div class="feature-desc">
+                    Interactive prompt collaboration game. Build creative prompts with AI assistance.
+                </div>
+                <div class="feature-tag coming">Coming Soon</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔓</div>
+                <div class="feature-title">Future Features</div>
+                <div class="feature-desc">
+                    Premium subscribers automatically get access to all new tools and features as they launch.
+                </div>
+                <div class="feature-tag coming">Always Included</div>
+            </div>
+        </div>
+
+        <!-- Subscribe Section -->
+        <div class="subscribe-section" id="subscribe-section">
+            <div class="subscribe-title">Get Premium Access</div>
+            <div class="subscribe-price">$0 <span>/ lifetime</span></div>
+            <p class="subscribe-note">
+                During our beta period, premium access is <strong>free</strong>.<br>
+                Subscribe now to lock in your lifetime access before pricing changes.
+            </p>
+            <button class="btn-subscribe" id="subscribe-btn">
+                ⭐ Activate Premium Access
+            </button>
+            <br>
+            <a href="/" class="btn-secondary">← Back to Home</a>
+        </div>
+
+        <!-- Already Premium Section (hidden by default) -->
+        <div class="subscribe-section" id="already-premium" style="display:none;">
+            <div class="subscribe-title">You're All Set!</div>
+            <p class="subscribe-note" style="margin-bottom:0;">
+                You already have premium access. Enjoy all the features!
+            </p>
+            <a href="/test" class="btn-subscribe" style="margin-top:24px; text-decoration:none;">
+                🎙️ Launch Phone Tester
+            </a>
+            <br>
+            <a href="/" class="btn-secondary">← Back to Home</a>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="footer-note">
+            Questions? Contact us at <a href="mailto:support@bruhnfreeman.com">support@bruhnfreeman.com</a><br>
+            <a href="/terms">Terms of Service</a> · <a href="/privacy">Privacy Policy</a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── Toast helper ──
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.toggle('error', isError);
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 4000);
+        }
+
+        // ── Check URL params for alerts ──
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const reason = params.get('reason');
+            const banner = document.getElementById('alert-banner');
+            
+            if (reason === 'not-premium') {
+                banner.textContent = '// Premium subscription required to access this feature.';
+                banner.style.display = 'block';
+            } else if (reason === 'expired') {
+                banner.textContent = '// Your premium subscription has expired. Please renew to continue.';
+                banner.className = 'alert error';
+                banner.style.display = 'block';
+            } else if (reason === 'error') {
+                banner.textContent = '// An error occurred. Please try again.';
+                banner.className = 'alert error';
+                banner.style.display = 'block';
+            }
+
+            // Clean URL
+            if (reason) {
+                history.replaceState(null, '', '/subscribe');
+            }
+        })();
+
+        // ── Fetch user status ──
+        (async function() {
+            try {
+                const res = await fetch('/api/subscription-status');
+                if (!res.ok) {
+                    window.location.href = '/?open=login';
+                    return;
+                }
+                const data = await res.json();
+
+                if (data.isPremium) {
+                    document.getElementById('premium-status').classList.add('show');
+                    document.getElementById('subscribe-section').style.display = 'none';
+                    document.getElementById('already-premium').style.display = 'block';
+                    
+                    if (data.premiumSince) {
+                        const since = new Date(data.premiumSince).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'long', day: 'numeric'
+                        });
+                        document.getElementById('premium-since').textContent = `Active since ${since}`;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to fetch subscription status', e);
+            }
+        })();
+
+        // ── Subscribe button ──
+        document.getElementById('subscribe-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('subscribe-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                const res = await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (data.ok) {
+                    showToast('Premium activated! Redirecting...');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast(data.message || 'Subscription failed', true);
+                    btn.disabled = false;
+                    btn.textContent = '⭐ Activate Premium Access';
+                }
+            } catch (e) {
+                showToast('Network error. Please try again.', true);
+                btn.disabled = false;
+                btn.textContent = '⭐ Activate Premium Access';
+            }
+        });
+
+        // ── Logout ──
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/';
+        });
+    </script>
+</body>
+
+</html>

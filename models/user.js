@@ -52,6 +52,11 @@ const userSchema = new Schema({
   optInTimestamp:    { type: Date, default: null },
   optInIp:           { type: String, default: '' },
   optInSource:       { type: String, default: '' },
+  // Premium subscription fields
+  isPremium:         { type: Boolean, default: false },
+  premiumSince:      { type: Date, default: null },
+  premiumExpiresAt:  { type: Date, default: null },  // null = lifetime/manual
+  premiumSource:     { type: String, default: '' },  // 'manual', 'stripe', 'promo', etc.
   createdAt:         { type: Date, default: Date.now },
   lastTestAt: { type: Date, default: null },
   geoHistory: { type: [geoEntrySchema], default: [] }
