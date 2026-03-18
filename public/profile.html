@@ -335,6 +335,208 @@
             gap: 18px 24px;
         }
 
+        /* ── SMS Notification Settings ── */
+        .sms-intro {
+            margin-bottom: 24px;
+        }
+        .sms-intro p {
+            font-size: .88rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+        .sms-intro strong {
+            color: var(--white-s);
+        }
+
+        .sms-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .sms-option {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 20px;
+            background: rgba(0,212,255,.03);
+            border: 1px solid rgba(0,212,255,.12);
+            border-radius: 4px;
+            transition: border-color .2s, background .2s;
+        }
+        .sms-option:hover {
+            border-color: rgba(0,212,255,.25);
+            background: rgba(0,212,255,.05);
+        }
+
+        .sms-opt-info {
+            flex: 1;
+        }
+        .sms-opt-title {
+            font-family: var(--fm);
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--white-s);
+            margin-bottom: 6px;
+        }
+        .sms-opt-desc {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        /* Toggle switch */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 26px;
+            transition: background .3s, border-color .3s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--muted);
+            border-radius: 50%;
+            transition: transform .3s, background .3s;
+        }
+        .toggle input:checked + .toggle-slider {
+            background: rgba(0,212,255,.2);
+            border-color: var(--cyan);
+        }
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+            background: var(--cyan);
+            box-shadow: 0 0 8px rgba(0,212,255,.5);
+        }
+        .toggle input:focus + .toggle-slider {
+            box-shadow: 0 0 0 2px rgba(0,212,255,.25);
+        }
+
+        /* SMS Compliance box */
+        .sms-compliance {
+            display: flex;
+            gap: 16px;
+            padding: 20px 22px;
+            background: rgba(59,130,246,.05);
+            border: 1px solid rgba(59,130,246,.2);
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+        .sms-compliance-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .sms-compliance-text p {
+            font-size: .84rem;
+            line-height: 1.7;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+        .sms-compliance-text ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sms-compliance-text li {
+            font-size: .8rem;
+            line-height: 1.7;
+            color: var(--muted);
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+        .sms-compliance-text li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-size: .7rem;
+        }
+        .sms-compliance-text strong {
+            color: var(--white-s);
+            font-weight: 500;
+        }
+        .sms-compliance-text a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: opacity .2s;
+        }
+        .sms-compliance-text a:hover {
+            opacity: .8;
+        }
+        .sms-compliance-text .kw {
+            font-family: var(--fm);
+            font-size: .72rem;
+            letter-spacing: .08em;
+            background: rgba(0,212,255,.1);
+            border: 1px solid rgba(0,212,255,.25);
+            padding: 2px 8px;
+            border-radius: 2px;
+            color: var(--cyan);
+        }
+
+        /* SMS Save bar */
+        .sms-save-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-sms-save {
+            font-family: var(--fm);
+            font-weight: 700;
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            background: transparent;
+            border: 1px solid rgba(0,212,255,.4);
+            padding: 11px 24px;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+        }
+        .btn-sms-save:hover {
+            background: rgba(0,212,255,.08);
+            border-color: var(--cyan);
+        }
+        .btn-sms-save:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+        .sms-save-status {
+            font-family: var(--fm);
+            font-size: .62rem;
+            letter-spacing: .08em;
+            opacity: 0;
+            transition: opacity .3s;
+        }
+        .sms-save-status.show { opacity: 1; }
+        .sms-save-status.ok  { color: var(--green); }
+        .sms-save-status.err { color: var(--red); }
+
         /* ── Action bar ── */
         .action-bar {
             display: flex;
@@ -556,6 +758,74 @@
                 </div>
             </div>
 
+            <!-- SMS Notifications -->
+            <div class="section" id="sms-section">
+                <div class="section-hd">
+                    <span class="section-title">// SMS Notifications</span>
+                    <span class="section-line"></span>
+                </div>
+                
+                <div class="sms-intro">
+                    <p>Enable text message notifications for the services below. Each setting is optional and can be changed at any time. <strong>Message and data rates may apply.</strong></p>
+                </div>
+
+                <div class="sms-options">
+                    <!-- MFA SMS -->
+                    <div class="sms-option">
+                        <div class="sms-opt-info">
+                            <div class="sms-opt-title">Multi-Factor Authentication (MFA)</div>
+                            <div class="sms-opt-desc">Receive one-time security codes via text message for account login verification. Approximately 1-5 messages per login attempt.</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="sms-mfa" name="smsMfa" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Announcements SMS -->
+                    <div class="sms-option">
+                        <div class="sms-opt-info">
+                            <div class="sms-opt-title">Site Announcements</div>
+                            <div class="sms-opt-desc">Receive occasional updates about new features, service changes, and important announcements. Approximately 1-4 messages per month.</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="sms-announcements" name="smsAnnouncements" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Diagnostics SMS -->
+                    <div class="sms-option">
+                        <div class="sms-opt-info">
+                            <div class="sms-opt-title">Testing &amp; Diagnostic Tools</div>
+                            <div class="sms-opt-desc">Receive SMS messages from diagnostic and testing tools hosted on this site (e.g., PhoneTester). Message frequency varies based on your usage.</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="sms-diagnostics" name="smsDiagnostics" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sms-compliance">
+                    <div class="sms-compliance-icon">📱</div>
+                    <div class="sms-compliance-text">
+                        <p>By enabling any SMS option above, you expressly consent to receive text messages from Bruhn Freeman at the phone number associated with your account.</p>
+                        <ul>
+                            <li><strong>Opt-out anytime:</strong> Reply <span class="kw">STOP</span> to any message to unsubscribe from all SMS communications.</li>
+                            <li><strong>Get help:</strong> Reply <span class="kw">HELP</span> for support information.</li>
+                            <li><strong>No purchase required:</strong> Consent is not a condition of any purchase or service.</li>
+                            <li><strong>Your data is protected:</strong> We never share your phone number with third parties for marketing. See our <a href="/privacy">Privacy Policy</a> and <a href="/sms-compliance">SMS Compliance</a> page.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sms-save-bar">
+                    <button type="button" class="btn-sms-save" id="sms-save-btn">Save SMS Preferences →</button>
+                    <span class="sms-save-status" id="sms-save-status"></span>
+                </div>
+            </div>
+
             <!-- Save -->
             <div class="action-bar">
                 <button type="submit" class="btn-save" id="save-btn">Save Profile →</button>
@@ -612,6 +882,12 @@
                     <div class="meta-row"><span class="meta-key">// Email</span><span class="meta-val">${escHtml(d.email)}</span></div>
                     <div class="meta-row"><span class="meta-key">// Member Since</span><span class="meta-val">${joined}</span></div>
                 `;
+
+                // SMS preferences
+                const smsPrefs = d.smsPrefs || {};
+                document.getElementById('sms-mfa').checked = smsPrefs.mfa?.enabled || false;
+                document.getElementById('sms-announcements').checked = smsPrefs.announcements?.enabled || false;
+                document.getElementById('sms-diagnostics').checked = smsPrefs.diagnostics?.enabled || false;
             } catch (err) {
                 showStatus('err', '// Could not load profile. Please refresh.');
             }
@@ -774,6 +1050,43 @@
             el.className = `status-panel ${type}`;
             el.style.display = 'block';
         }
+
+        // ── SMS Preferences Save ──────────────────────────────────────────────
+        document.getElementById('sms-save-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('sms-save-btn');
+            const statusEl = document.getElementById('sms-save-status');
+
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+            statusEl.className = 'sms-save-status';
+            statusEl.textContent = '';
+
+            const body = new URLSearchParams();
+            body.append('smsMfa', document.getElementById('sms-mfa').checked ? 'true' : 'false');
+            body.append('smsAnnouncements', document.getElementById('sms-announcements').checked ? 'true' : 'false');
+            body.append('smsDiagnostics', document.getElementById('sms-diagnostics').checked ? 'true' : 'false');
+
+            try {
+                const res = await fetch('/api/profile/sms-preferences', { method: 'POST', body });
+                const data = await res.json();
+
+                if (data.ok) {
+                    statusEl.textContent = '// SMS preferences saved ✓';
+                    statusEl.className = 'sms-save-status show ok';
+                    setTimeout(() => statusEl.classList.remove('show'), 4000);
+                } else {
+                    const msg = data.error || 'Save failed.';
+                    statusEl.textContent = `// ${msg}`;
+                    statusEl.className = 'sms-save-status show err';
+                }
+            } catch (err) {
+                statusEl.textContent = '// Network error. Please try again.';
+                statusEl.className = 'sms-save-status show err';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save SMS Preferences →';
+            }
+        });
 
         // ── Init ──────────────────────────────────────────────────────────────
         loadProfile();

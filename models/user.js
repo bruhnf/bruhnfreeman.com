@@ -48,6 +48,28 @@ const userSchema = new Schema({
   codeWords:  [String],
   attempts:   { type: Number, default: 0 },
   status:     { type: String, enum: ['pending', 'verified', 'success', 'failed'], default: 'pending' },
+  // SMS notification preferences (A2P compliant - each off by default, requires explicit opt-in)
+  smsPrefs: {
+    mfa: {
+      enabled:   { type: Boolean, default: false },
+      optInAt:   { type: Date, default: null },
+      optInIp:   { type: String, default: '' },
+      optOutAt:  { type: Date, default: null }
+    },
+    announcements: {
+      enabled:   { type: Boolean, default: false },
+      optInAt:   { type: Date, default: null },
+      optInIp:   { type: String, default: '' },
+      optOutAt:  { type: Date, default: null }
+    },
+    diagnostics: {
+      enabled:   { type: Boolean, default: false },
+      optInAt:   { type: Date, default: null },
+      optInIp:   { type: String, default: '' },
+      optOutAt:  { type: Date, default: null }
+    }
+  },
+  // Legacy SMS opt-in fields (kept for migration, deprecated)
   optInSMS:          { type: Boolean, default: false },
   optInTimestamp:    { type: Date, default: null },
   optInIp:           { type: String, default: '' },

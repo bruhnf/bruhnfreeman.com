@@ -29,7 +29,7 @@ router.get('/api/profile', isAuthenticated, async (req, res) => {
   try {
     const user = await User.findById(
       req.session.userId,
-      'firstName lastName username email phone bio fieldOfStudy address websites avatarUrl createdAt'
+      'firstName lastName username email phone bio fieldOfStudy address websites avatarUrl createdAt smsPrefs'
     );
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
@@ -78,6 +78,58 @@ router.post('/api/profile', isAuthenticated, [
     res.json({ ok: true });
   } catch (err) {
     console.error('POST /api/profile error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ── POST /api/profile/sms-preferences ─────────────────────────────────────────
+// A2P compliant SMS opt-in - explicit consent with metadata tracking
+router.post('/api/profile/sms-preferences', isAuthenticated, async (req, res) => {
+  const { smsMfa, smsAnnouncements, smsDiagnostics } = req.body;
+  const clientIp = req.headers['x-forwarded-for'] || req.ip || '';
+  const now = new Date();
+
+  try {
+    const user = await User.findById(req.session.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Initialize smsPrefs if not exists
+    if (!user.smsPrefs) {
+      user.smsPrefs = { mfa: {}, announcements: {}, diagnostics: {} };
+    }
+
+    // Helper to update opt-in/opt-out with compliance tracking
+    const updatePref = (prefKey, newValue) => {
+      const pref = user.smsPrefs[prefKey] || {};
+      const isEnabling = newValue === 'true';
+      const wasEnabled = pref.enabled || false;
+
+      if (isEnabling && !wasEnabled) {
+        // User is opting IN - record consent
+        pref.enabled = true;
+        pref.optInAt = now;
+        pref.optInIp = clientIp;
+        pref.optOutAt = null;
+      } else if (!isEnabling && wasEnabled) {
+        // User is opting OUT - record revocation
+        pref.enabled = false;
+        pref.optOutAt = now;
+      } else {
+        // No change
+        pref.enabled = isEnabling;
+      }
+      user.smsPrefs[prefKey] = pref;
+    };
+
+    updatePref('mfa', smsMfa);
+    updatePref('announcements', smsAnnouncements);
+    updatePref('diagnostics', smsDiagnostics);
+
+    await user.save();
+    console.log(`SMS preferences updated for user ${user.email}: MFA=${smsMfa}, Announcements=${smsAnnouncements}, Diagnostics=${smsDiagnostics}`);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('POST /api/profile/sms-preferences error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });

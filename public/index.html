@@ -1119,6 +1119,63 @@
             }
         }
 
+        /* SMS REMINDER BAR */
+        .sms-reminder {
+            background: linear-gradient(90deg, rgba(0,212,255,.08), rgba(59,130,246,.08));
+            border-bottom: 1px solid rgba(0,212,255,.2);
+            padding: 14px 0;
+        }
+        .sms-reminder-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            justify-content: center;
+        }
+        .sms-reminder-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .sms-reminder-text {
+            font-family: var(--fd);
+            font-size: .82rem;
+            color: rgba(255,255,255,.75);
+            line-height: 1.5;
+        }
+        .sms-reminder-text strong {
+            color: var(--cyan);
+            font-weight: 500;
+        }
+        .sms-reminder-text a {
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .sms-reminder-text a:hover {
+            text-decoration: underline;
+        }
+        .sms-reminder-close {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.5);
+            font-size: .9rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color .2s;
+            flex-shrink: 0;
+        }
+        .sms-reminder-close:hover {
+            color: var(--cyan);
+        }
+        @media (max-width: 640px) {
+            .sms-reminder-content {
+                flex-wrap: wrap;
+                text-align: center;
+            }
+            .sms-reminder-text {
+                font-size: .76rem;
+            }
+        }
+
         /* STATS */
         #stats {
             background: linear-gradient(90deg, rgba(26, 111, 255, .07), rgba(192, 64, 255, .07));
@@ -2559,21 +2616,6 @@
                     <input class="fi" type="password" name="password" placeholder="min. 6 characters" minlength="6"
                         required />
                 </div>
-                <!-- SMS OPT-IN CHECKBOX -->
-                <div class="fg" style="margin-top:10px">
-                    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
-                        <input type="checkbox" name="optin" value="yes" id="optin"
-                            style="margin-top:3px;accent-color:var(--cyan);width:15px;height:15px;flex-shrink:0;" />
-                        <span
-                            style="font-family:var(--fm);font-size:.68rem;color:rgba(255,255,255,.65);line-height:1.6;letter-spacing:.03em;">
-                            By signing up, I agree to receive text messages from Bruhn Freeman for
-                            account security and service notifications. Message frequency varies.
-                            Message &amp; data rates may apply. Reply STOP to cancel, HELP for help.
-                            View our <a href="/privacy" style="color:var(--cyan);">Privacy Policy</a>
-                            and <a href="/terms" style="color:var(--cyan);">Terms of Service</a>.
-                        </span>
-                    </label>
-                </div>
                 <button type="submit" class="btn-c"
                     style="width:100%;justify-content:center;clip-path:none;border-radius:2px;margin-top:10px">
                     Initialize Account →
@@ -2697,6 +2739,19 @@
                 <div class="h-sbar"></div><span>SCROLL</span>
             </div>
         </section>
+
+        <!-- SMS NOTIFICATION REMINDER (shown to logged-in users) -->
+        <div id="sms-reminder" class="sms-reminder" style="display:none;">
+            <div class="container">
+                <div class="sms-reminder-content">
+                    <span class="sms-reminder-icon">📱</span>
+                    <span class="sms-reminder-text">
+                        <strong>Enable SMS notifications</strong> for MFA security codes, site updates, and diagnostic tool alerts. Visit your <a href="/profile#sms-section">Profile Settings</a> to customize your preferences.
+                    </span>
+                    <button class="sms-reminder-close" id="sms-reminder-close" title="Dismiss">✕</button>
+                </div>
+            </div>
+        </div>
 
         <!-- STATS -->
         <div id="stats">
@@ -3418,9 +3473,24 @@
                         await fetch('/logout', { method: 'POST' });
                         location.reload();
                     });
+
+                    // Show SMS reminder for logged-in users (unless dismissed)
+                    const smsReminderDismissed = localStorage.getItem('sms-reminder-dismissed');
+                    if (!smsReminderDismissed) {
+                        const smsReminder = document.getElementById('sms-reminder');
+                        if (smsReminder) {
+                            smsReminder.style.display = 'block';
+                        }
+                    }
                 }
             } catch (e) { /* fail silently */ }
         })();
+
+        // SMS reminder dismiss handler
+        document.getElementById('sms-reminder-close')?.addEventListener('click', () => {
+            document.getElementById('sms-reminder').style.display = 'none';
+            localStorage.setItem('sms-reminder-dismissed', 'true');
+        });
     </script>
 </body>
 

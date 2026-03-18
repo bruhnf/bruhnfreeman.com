@@ -38,7 +38,7 @@ router.post('/signup', [
     console.log('Validation errors:', errors.array());
     return res.redirect(`/?open=signup&error=${encodeURIComponent(errors.array().map(e => e.msg).join(', '))}`);
   }
-  let { first_name, last_name, username, email, phone, password, optin } = req.body;
+  let { first_name, last_name, username, email, phone, password } = req.body;
   try {
     phone = normalizePhone(phone);  // Normalize to E.164
     let user = await User.findOne({ $or: [{ username }, { email }] });
@@ -56,12 +56,8 @@ router.post('/signup', [
       email,
       phone,
       password: hashedPassword,
-      emailToken: token,
-      optInSMS: optin === 'yes',
-      // A2P 10DLC compliance: Log consent metadata
-      optInTimestamp: optin === 'yes' ? new Date() : null,
-      optInIp: optin === 'yes' ? (req.headers['x-forwarded-for'] || req.ip || '') : '',
-      optInSource: optin === 'yes' ? 'web_signup_form' : ''
+      emailToken: token
+      // SMS preferences are disabled by default and must be explicitly enabled via profile settings
     });
     await user.save();
     await sendVerificationEmail(email, token);
